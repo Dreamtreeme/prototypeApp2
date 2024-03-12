@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "372765012452",
+    "project_id": "tpprototypepsg2024",
+    "storage_bucket": "tpprototypepsg2024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372765012452:android:e1c2570ed50c9e2553d7f1",
+        "android_client_info": {
+          "package_name": "com.psg2024.tpprototypeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtr733zmGTGzzfqea2QUn1JyL7K99tJsE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
