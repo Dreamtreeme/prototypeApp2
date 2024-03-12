@@ -15,7 +15,6 @@ import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
 import com.psg2024.tpprototypeapp.G
-import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.data.UserAccount
 import com.psg2024.tpprototypeapp.databinding.ActivityLoginBinding
 import com.psg2024.tpprototypeapp.network.RetrofitHelper
@@ -23,7 +22,6 @@ import com.psg2024.tpprototypeapp.network.RetrofitService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
 
 class LoginActivity : AppCompatActivity() {
 
@@ -39,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
         }
         //이메일 로그인 버튼 클릭
         binding.btnLogin.setOnClickListener {
-            startActivity(Intent(this, EmailloginActivity::class.java))
+            startActivity(Intent(this, IdloginActivity::class.java))
         }
 
         //간편로그인 버튼들 클릭

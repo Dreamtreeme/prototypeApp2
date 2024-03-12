@@ -20,7 +20,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activities.EmailloginActivity"
+            android:name=".activities.IdloginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SignupActivity"

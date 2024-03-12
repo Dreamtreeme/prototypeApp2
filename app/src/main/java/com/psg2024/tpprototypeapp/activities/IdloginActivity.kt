@@ -8,12 +8,12 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.psg2024.tpprototypeapp.G
-import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.data.UserAccount
-import com.psg2024.tpprototypeapp.databinding.ActivityEmailloginBinding
 
-class EmailloginActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityEmailloginBinding.inflate(layoutInflater) }
+import com.psg2024.tpprototypeapp.databinding.ActivityIdloginBinding
+
+class IdloginActivity : AppCompatActivity() {
+    private val binding by lazy { ActivityIdloginBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -23,7 +23,7 @@ class EmailloginActivity : AppCompatActivity() {
     }
 
     private fun clickSignIn() {
-        var email = binding.inputLayoutEmail.editText!!.text.toString()
+        var email = binding.inputLayoutID.editText!!.text.toString()
         var password = binding.inputLayoutPassword.editText!!.text.toString()
 
         val userRef: CollectionReference = Firebase.firestore.collection("emailUsers")
@@ -42,8 +42,8 @@ class EmailloginActivity : AppCompatActivity() {
             }else{
                 //이멜일과 비밀번호에 해당하는 document가 없는것. 로그인 실패
                 AlertDialog.Builder(this).setMessage("이메일과 비밀번호를 다시 확인해주세요").create().show()
-                binding.inputLayoutEmail.editText!!.requestFocus()
-                binding.inputLayoutEmail.editText!!.selectAll()
+                binding.inputLayoutID.editText!!.requestFocus()
+                binding.inputLayoutID.editText!!.selectAll()
             }
         }
     }
