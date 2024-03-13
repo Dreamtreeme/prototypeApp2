@@ -229,11 +229,11 @@ class MainActivity : AppCompatActivity() {
 
         //카카오 로컬 검색 API를 활용하여 키워드로 장소를 검색하는 기능 메소드
         fun searchPlaces() {
-            Toast.makeText(
-                this,
-                "$searchQuery\n${myLocation?.latitude},${myLocation?.longitude}",
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                this,
+//                "$searchQuery\n${myLocation?.latitude},${myLocation?.longitude}",
+//                Toast.LENGTH_SHORT
+//            ).show()
             //레트로핏을 이용한 REST API 작업 수행 -GET방식
             val retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
             val retrofitApiService = retrofit.create(RetrofitService::class.java)
@@ -271,18 +271,9 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "서버 오류가 있습니다.", Toast.LENGTH_SHORT).show()
                 }
             })
-//        val call=retrofitApiService.searchPlaceToString(searchQuery, myLocation?.longitude.toString(), myLocation?.latitude.toString())
-//        call.enqueue(object : Callback<String>{
-//            override fun onResponse(call: Call<String>, response: Response<String>) {
-//                val s= response.body()
-//                AlertDialog.Builder(this@MainActivity).setMessage(s).create().show()
-//            }
-//
-//            override fun onFailure(call: Call<String>, t: Throwable) {
-//                Toast.makeText(this@MainActivity, "error: ${t.message}", Toast.LENGTH_SHORT).show()
-//            }
-//        })
+
 
         }
+
 
 }//mainActivity

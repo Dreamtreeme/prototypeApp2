@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/mkroom"
+        android:src="@drawable/baseline_add_home_24"
         android:layout_margin="16dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
