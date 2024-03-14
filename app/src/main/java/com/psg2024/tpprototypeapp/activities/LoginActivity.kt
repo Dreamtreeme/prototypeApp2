@@ -44,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLoginKakao.setOnClickListener { clickKakao() }
         binding.btnLoginGoogle.setOnClickListener { clickGoogle() }
         binding.btnLoginNaver.setOnClickListener { clickNaver() }
+        binding.btnDate.setOnClickListener { startActivity(Intent(this, MakeRoomActivity::class.java)) }
+
     }
 
     private fun clickKakao() {

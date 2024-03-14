@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:weightSum="10"
+    tools:context=".activities.SubMainActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:background="#F79433"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/exit_app">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/logo"/>
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <FrameLayout
+        android:id="@+id/container_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:layout_marginTop="8dp"/>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:id="@+id/bnv"
+        style="@style/Widget.MaterialComponents.BottomNavigationView"
+        android:layout_marginRight="16dp"
+        app:menu="@menu/bnv"
+        android:background="#00000000"
+        app:itemIconTint="@color/bnv_item"
+        app:itemTextColor="@color/bnv_item"/>
+
+</LinearLayout>
