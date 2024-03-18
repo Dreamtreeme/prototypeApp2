@@ -69,7 +69,11 @@
             app:itemTextColor="@color/bnv_item"/>
 
     </com.google.android.material.bottomappbar.BottomAppBar>
-
+<Button
+    android:id="@+id/noty_btn"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_refresh"
         android:layout_width="wrap_content"

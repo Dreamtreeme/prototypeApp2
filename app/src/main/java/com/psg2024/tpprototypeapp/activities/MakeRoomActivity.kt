@@ -22,6 +22,8 @@ class MakeRoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
 
 
 

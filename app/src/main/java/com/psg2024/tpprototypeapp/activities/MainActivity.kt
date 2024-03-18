@@ -2,8 +2,15 @@ package com.psg2024.tpprototypeapp.activities
 
 import android.Manifest
 import android.animation.ObjectAnimator
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.location.Location
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
@@ -14,6 +21,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -62,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        clickBtn()
 
         //처음 보여질 프레그먼트를 화면에 붙이기
         supportFragmentManager.beginTransaction().add(R.id.container_fragment, PlaceListFragment())
@@ -77,10 +86,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_bnv_map -> supportFragmentManager.beginTransaction()
                     .replace(R.id.container_fragment, PlaceMapFragment()).commit()
 
-                R.id.menu_bnv_favor -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.container_fragment, PlaceFavorFragment()).commit()
 
-                R.id.menu_bnv_option -> Toast.makeText(this, "dd", Toast.LENGTH_SHORT).show()
+
             }
 
             true// OnItemSelectedListener의 추상메소드는 리턴값을 가지고 있음. SAM변환을 하면 return키워드를 사용하면 안됨.
@@ -177,16 +184,7 @@ class MainActivity : AppCompatActivity() {
 
 
         private fun setChoiceButtonsListener() {
-            binding.layoutChoice.choice01.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice02.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice03.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice04.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice05.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice06.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice07.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice08.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice09.setOnClickListener { clickChoice(it) }
-            binding.layoutChoice.choice10.setOnClickListener { clickChoice(it) }
+
         }
 //멤버변수
         var choiceID = R.id.choice_01
@@ -274,6 +272,49 @@ class MainActivity : AppCompatActivity() {
 
 
         }
+
+    fun clickBtn() {
+        // Android 13 버전부터 알림 사용 시 사용자 허가 필요
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionResult = checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+            if (permissionResult == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
+                return
+            }
+
+            val notificationManager : NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            val channel = NotificationChannel("ch01", "MyChannel", NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+
+            val builder = NotificationCompat.Builder(this, "ch01")
+
+            // 알림 내용 설정
+            builder.setSmallIcon(R.drawable.bg_choice)
+            builder.setContentTitle("Ex40의 알림")
+            builder.setContentText("알림 메세지를 이곳에 보여줍니다.")
+            builder.setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.logo))
+
+            // 알림 클릭 시 실행할 액티비티 설정
+            val intent = Intent(this, SecondActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            builder.setContentIntent(pendingIntent)
+            builder.setAutoCancel(true)
+
+            // 알림창에 추가 액션 설정
+            builder.addAction(R.drawable.bg_choice, "둘러보기", pendingIntent)
+            builder.addAction(R.drawable.bg_choice, "옵션", pendingIntent)
+
+            // 알림 스타일 설정
+            val picStyle = NotificationCompat.BigPictureStyle(builder)
+            picStyle.bigPicture(BitmapFactory.decodeResource(resources, R.drawable.logo))
+
+            val notification = builder.build()
+
+            // 알림 발송
+            notificationManager.notify(10, notification)
+        }
+    }
 
 
 }//mainActivity

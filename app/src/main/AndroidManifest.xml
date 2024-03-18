@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <!-- 알림 사용에 대한 퍼미션 등록 (동적 퍼미션 : 다이얼로그를 이용하여 앱 실행할때 사용자에게 허가를 요청하는 방식- 자바코드가 필요) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -19,10 +20,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activities.SubMainActivity"
+            android:name=".activities.SecondActivity"
             android:exported="false" />
+
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
+
         <activity
-            android:name=".activities.DateActivity"
+            android:name=".activities.SubMainActivity"
             android:exported="false" />
         <activity
             android:name=".activities.LocationActivity"
@@ -78,6 +87,14 @@
         <meta-data
             android:name="com.kakao.vectormap.APP_KEY"
             android:value="d6b81d530b8befbab4521cd32233df21" />
+
+        <service
+            android:name=".network.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
