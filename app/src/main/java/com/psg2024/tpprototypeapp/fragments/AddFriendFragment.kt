@@ -64,6 +64,13 @@ class AddFriendFragment : Fragment() {
                 user[G.userAccount!!.ID]= "friend"
                 user[addID]="unfriend"
 
+                userFriend.document().set(user).addOnSuccessListener {
+                    AlertDialog.Builder(requireContext()).setMessage("친구 추가 요청을 보냈습니다.")
+                        .setPositiveButton("확인", {p0, p1 -> }).show()
+                }// 친구요청을 보내면서 전역변수와 서버에 친구유무를 저장, 후에 친구 요청했을때
+                // 1)푸쉬알람, 2)푸쉬알람을 보고 내부 확인(xml만들어서 리사이클러뷰 만들기)해서 수락여부누르면 서버에 변수 바꾸기
+                // 3)친구 요청이 수락되어서 둘다 friend상태가 되면 전역변수에 유무 확인해서 친구목록 띄우기
+
             }
             else {
                 AlertDialog.Builder(requireContext()).setMessage("요청할 ID가 존재하지 않습니다")

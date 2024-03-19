@@ -28,6 +28,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.coroutine.TedPermission
 import com.psg2024.tpprototypeapp.G
 
 import com.psg2024.tpprototypeapp.R
@@ -70,7 +72,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        clickBtn()
+
+
 
         //처음 보여질 프레그먼트를 화면에 붙이기
         supportFragmentManager.beginTransaction().add(R.id.container_fragment, PlaceListFragment())
@@ -273,48 +276,46 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-    fun clickBtn() {
-        // Android 13 버전부터 알림 사용 시 사용자 허가 필요
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permissionResult = checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-            if (permissionResult == PackageManager.PERMISSION_DENIED) {
-                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 100)
-                return
-            }
 
-            val notificationManager : NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            val channel = NotificationChannel("ch01", "MyChannel", NotificationManager.IMPORTANCE_HIGH)
-            notificationManager.createNotificationChannel(channel)
+//            val notificationManager : NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//
+//            val channel = NotificationChannel("ch01", "MyChannel", NotificationManager.IMPORTANCE_HIGH)
+//            notificationManager.createNotificationChannel(channel)
+//
+//            val builder = NotificationCompat.Builder(this, "ch01")
+//
+//            // 알림 내용 설정
+//            builder.setSmallIcon(R.drawable.bg_choice)
+//            builder.setContentTitle("친구 요청 알림")
+//            builder.setContentText("친구요청을 보내기 위해 권한이 필요합니다.")
+//            builder.setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.logo))
+//
+//            // 알림 클릭 시 실행할 액티비티 설정
+//            val intent = Intent(this, SecondActivity::class.java)
+//            val pendingIntent = PendingIntent.getActivity(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+//            builder.setContentIntent(pendingIntent)
+//            builder.setAutoCancel(true)
+//
+//            // 알림창에 추가 액션 설정
+//            builder.addAction(R.drawable.bg_choice, "둘러보기", pendingIntent)
+//            builder.addAction(R.drawable.bg_choice, "옵션", pendingIntent)
+//
+//            // 알림 스타일 설정
+//            val picStyle = NotificationCompat.BigPictureStyle(builder)
+//            picStyle.bigPicture(BitmapFactory.decodeResource(resources, R.drawable.logo))
+//
+//            val notification = builder.build()
+//
+//            // 알림 발송
+//            notificationManager.notify(10, notification)
 
-            val builder = NotificationCompat.Builder(this, "ch01")
 
-            // 알림 내용 설정
-            builder.setSmallIcon(R.drawable.bg_choice)
-            builder.setContentTitle("Ex40의 알림")
-            builder.setContentText("알림 메세지를 이곳에 보여줍니다.")
-            builder.setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.logo))
 
-            // 알림 클릭 시 실행할 액티비티 설정
-            val intent = Intent(this, SecondActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            builder.setContentIntent(pendingIntent)
-            builder.setAutoCancel(true)
 
-            // 알림창에 추가 액션 설정
-            builder.addAction(R.drawable.bg_choice, "둘러보기", pendingIntent)
-            builder.addAction(R.drawable.bg_choice, "옵션", pendingIntent)
 
-            // 알림 스타일 설정
-            val picStyle = NotificationCompat.BigPictureStyle(builder)
-            picStyle.bigPicture(BitmapFactory.decodeResource(resources, R.drawable.logo))
 
-            val notification = builder.build()
 
-            // 알림 발송
-            notificationManager.notify(10, notification)
-        }
-    }
 
 
 }//mainActivity

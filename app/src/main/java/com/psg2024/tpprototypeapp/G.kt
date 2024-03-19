@@ -16,5 +16,9 @@ class G{
 
         var documents: MutableList<Place>? = mutableListOf()
 
+        var token : String? =null
+
+
+
     }
 }
