@@ -52,10 +52,12 @@
         android:textSize="16dp"
         android:text="모임 장소"/>
     <TextView
+        android:id="@+id/receive_location"
         android:layout_width="240dp"
         android:layout_height="120dp"
         android:layout_marginLeft="16dp"
         android:text=""
+        android:textSize="24sp"
         android:backgroundTint="@color/white"/>
     <TextView
 

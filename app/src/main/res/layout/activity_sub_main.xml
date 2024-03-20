@@ -27,14 +27,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="9"
-        android:layout_marginTop="8dp"/>
+        />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp"
         android:id="@+id/bnv"
         style="@style/Widget.MaterialComponents.BottomNavigationView"
-        android:layout_marginRight="16dp"
         app:menu="@menu/bnv"
         android:background="#00000000"
         app:itemIconTint="@color/bnv_item"

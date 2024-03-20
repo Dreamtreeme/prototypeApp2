@@ -17,8 +17,8 @@ interface RetrofitService {
 
     // 응답 타입을 서치플레이스레스폰스로
     @Headers("Authorization: KakaoAK c1f9c0a7641d9c43ec5ab1dcda96744e")
-    @GET("/v2/local/search/keyword.json?sort=distance")
-    fun searchPlace(@Query("query") query:String,@Query("x") longitude:String,@Query("y") latitude:String, @Query("page") page:Int) :Call<KakaoSearchPlaceResponse>
+    @GET("/v2/local/search/keyword.json")
+    fun searchPlace(@Query("query") query:String,) :Call<KakaoSearchPlaceResponse>
 
     // 네이버 api
     @GET("/v1/nid/me")

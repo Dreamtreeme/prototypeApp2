@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         binding.etSearch.setOnEditorActionListener { v, actionId, event ->
             searchQuery = binding.etSearch.text.toString()
             //키워드로 장소 검색 요청
-            pgIndex1=1
+
             G.documents!!.clear()
             searchPlaces()
             binding.etSearch.text.clear()
@@ -240,9 +240,8 @@ class MainActivity : AppCompatActivity() {
             val retrofitApiService = retrofit.create(RetrofitService::class.java)
             val call = retrofitApiService.searchPlace(
                 searchQuery,
-                myLocation?.longitude.toString(),
-                myLocation?.latitude.toString(),
-                pgIndex1
+
+
             )
             call.enqueue(object : Callback<KakaoSearchPlaceResponse> {
                 override fun onResponse(

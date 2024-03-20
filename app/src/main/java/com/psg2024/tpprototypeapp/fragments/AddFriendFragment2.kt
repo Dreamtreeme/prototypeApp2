@@ -40,12 +40,6 @@ class AddFriendFragment2 : Fragment() {
         binding = FragmentAddFriend2Binding.inflate(inflater, container, false)
         return binding.root
     }
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable("scroll_position", binding.recyclerView.layoutManager?.onSaveInstanceState())
-    }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,6 +47,7 @@ class AddFriendFragment2 : Fragment() {
 
 
         binding.recyclerView.adapter = RequestFriendAdapter(requireContext(), FriendRequestList!! )
+        binding.recyclerView.adapter!!.notifyDataSetChanged()
 
 
 

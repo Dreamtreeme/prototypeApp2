@@ -3,6 +3,7 @@ package com.psg2024.tpprototypeapp.activities
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,10 @@ class MakeRoomActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.btnLocation.setOnClickListener { startActivity(Intent(this, LocationActivity::class.java)) }
+        val s: String? = intent.getStringExtra("place")
+        binding.receiveLocation.text= s
+
 
 
 

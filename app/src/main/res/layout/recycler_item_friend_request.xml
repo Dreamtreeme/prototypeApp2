@@ -1,42 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:backgroundTint="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="4dp"
     app:cardCornerRadius="4dp"
-    app:contentPadding="16dp"
+    app:contentPadding="8dp"
     android:layout_margin="8dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10">
 
         <TextView
             android:id="@+id/tv_request"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$ID 님이 친구요청을 신청 하셨습니다\n수락하시겠습니까?"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:text="$ID님이 친구요청을 신청하셨습니다\n수락하시겠습니까?"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:padding="4dp"/>
         <ImageView
             android:id="@+id/iv_yes"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_toLeftOf="@id/iv_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:src="@drawable/baseline_check_24"
+            android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:layout_gravity="center"
             android:padding="4dp"/>
         <ImageView
             android:id="@+id/iv_no"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
             android:layout_alignParentRight="true"
             android:src="@drawable/baseline_block_24"
             android:padding="4dp"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
