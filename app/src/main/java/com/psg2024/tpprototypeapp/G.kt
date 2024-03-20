@@ -1,5 +1,7 @@
 package com.psg2024.tpprototypeapp
 
+import com.psg2024.tpprototypeapp.data.FriendRequestID
+
 import com.psg2024.tpprototypeapp.data.KakaoSearchPlaceResponse
 import com.psg2024.tpprototypeapp.data.Place
 import com.psg2024.tpprototypeapp.data.UserAccount
@@ -17,6 +19,13 @@ class G{
         var documents: MutableList<Place>? = mutableListOf()
 
         var token : String? =null
+
+        var FriendRequestList: MutableList<FriendRequestID>? = mutableListOf()
+
+        var docmentsID: String? =null
+
+
+
 
 
 

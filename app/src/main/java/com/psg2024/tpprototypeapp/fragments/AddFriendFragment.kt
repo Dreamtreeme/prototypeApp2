@@ -1,5 +1,6 @@
 package com.psg2024.tpprototypeapp.fragments
 
+import android.app.Notification.MessagingStyle.Message
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +10,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.ktx.messaging
 import com.psg2024.tpprototypeapp.G
 import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.activities.AddFriendActivity
@@ -61,8 +66,11 @@ class AddFriendFragment : Fragment() {
             if (it.documents.size > 0) {
                 val userFriend = Firebase.firestore.collection("friendUsers")
                 val user: MutableMap<String, String> = mutableMapOf()
-                user[G.userAccount!!.ID]= "friend"
-                user[addID]="unfriend"
+                user["ID"]= G.userAccount!!.ID
+                user["requestFriend"]= "true"
+                user["FriendId"]= addID
+                user["accept"]= "false"
+
 
                 userFriend.document().set(user).addOnSuccessListener {
                     AlertDialog.Builder(requireContext()).setMessage("친구 추가 요청을 보냈습니다.")
@@ -79,6 +87,11 @@ class AddFriendFragment : Fragment() {
         }
 
     }
+
+
+
+
+
 
 
 
