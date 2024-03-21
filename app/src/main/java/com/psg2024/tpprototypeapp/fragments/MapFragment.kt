@@ -50,6 +50,13 @@ class MapFragment : Fragment() {
 
         //카카오 지도 start
         binding.mapView.start(mapReadyCallback)
+        // 지도에 좌표를 찍으면 서버에 등록, 내 좌표 얻어오는 코드-> 얻어온 좌표 아이디와 함께 보내기
+        // 그리고 서버에서 좌표값 가져와서 지도에 계속 그리기
+        // 친구초대를 한 경우 수락을 누른 순간 방에 들어와짐. 방에 들어오면 위의 코드가 발동하면서 같은 컬렉션에 저장됨
+        // 그렇다면 방 만들기를 눌렀을때 컬렉션 이름을 고유의 값으로 정해야함. 자기아이디+ 모임장소+날짜시간 조합해서 만들면됨
+        // 초대를 보냈을때 확인을 누르면 이 방으로 오게됨. 오게된 순간 같은 컬렉션에 저장. 즉 방만들기로 들가면 유일한 컬렉션이 생기는거고
+        // 일단 방만들때 서버에 컬렉션 만드는거나하자
+
 
 
     }
@@ -124,10 +131,15 @@ class MapFragment : Fragment() {
                 Toast.makeText(requireContext(), "${place.place_name}", Toast.LENGTH_SHORT).show()
                 val locationName : String = place.place_name
                 intent.putExtra("place",locationName)
+                G.pos.add(place.y)
+                G.pos.add(place.x)
+
+
 //                val json:String= Gson().toJson(place)
 //                intent.putExtra("place", json)
-
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
+
             }
         }
 

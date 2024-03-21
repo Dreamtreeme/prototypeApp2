@@ -92,6 +92,7 @@
         android:text=""/>
 
     <Button
+        android:id="@+id/go_sub_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="방 만들기"

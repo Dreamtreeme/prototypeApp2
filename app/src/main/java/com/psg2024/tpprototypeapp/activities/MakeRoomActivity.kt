@@ -10,10 +10,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.psg2024.tpprototypeapp.G
 import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.databinding.ActivityMakeRoomBinding
 import java.sql.Time
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.Date
 
 class MakeRoomActivity : AppCompatActivity() {
@@ -27,6 +32,11 @@ class MakeRoomActivity : AppCompatActivity() {
         binding.btnLocation.setOnClickListener { startActivity(Intent(this, LocationActivity::class.java)) }
         val s: String? = intent.getStringExtra("place")
         binding.receiveLocation.text= s
+        binding.goSubMain.setOnClickListener {
+            makeCollection()
+            finish()
+            startActivity(Intent(this, SubMainActivity::class.java))
+            }
 
 
 
@@ -65,5 +75,12 @@ class MakeRoomActivity : AppCompatActivity() {
                 }
             }
         }// 날짜 선택 끝났을때
+    }
+
+    private fun makeCollection() {
+        val s =binding.receiveLocation.text.toString()
+        val now = Instant.now().toEpochMilli().toString()
+        G.collectionName = G.userAccount!!.ID+s+now
+
     }
 }

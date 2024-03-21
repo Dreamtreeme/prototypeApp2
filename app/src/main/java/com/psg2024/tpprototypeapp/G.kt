@@ -24,6 +24,10 @@ class G{
 
         var docmentsID: String? =null
 
+        var collectionName: String? =null
+
+        var pos : ArrayList<String> = arrayListOf()
+
 
 
 

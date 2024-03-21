@@ -2,15 +2,8 @@ package com.psg2024.tpprototypeapp.activities
 
 import android.Manifest
 import android.animation.ObjectAnimator
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.location.Location
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
@@ -19,17 +12,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.coroutine.TedPermission
 import com.psg2024.tpprototypeapp.G
 
 import com.psg2024.tpprototypeapp.R
@@ -37,15 +26,13 @@ import com.psg2024.tpprototypeapp.data.KakaoSearchPlaceResponse
 import com.psg2024.tpprototypeapp.data.Place
 import com.psg2024.tpprototypeapp.data.PlaceMeta
 import com.psg2024.tpprototypeapp.databinding.ActivityMainBinding
-import com.psg2024.tpprototypeapp.fragments.PlaceFavorFragment
 import com.psg2024.tpprototypeapp.fragments.PlaceListFragment
-import com.psg2024.tpprototypeapp.fragments.PlaceMapFragment
+import com.psg2024.tpprototypeapp.fragments.SubMapFragment
 import com.psg2024.tpprototypeapp.network.RetrofitHelper
 import com.psg2024.tpprototypeapp.network.RetrofitService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
 
 class MainActivity : AppCompatActivity() {
 
@@ -87,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.container_fragment, PlaceListFragment()).commit()
 
                 R.id.menu_bnv_map -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.container_fragment, PlaceMapFragment()).commit()
+                    .replace(R.id.container_fragment, SubMapFragment()).commit()
 
 
 
