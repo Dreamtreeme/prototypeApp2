@@ -116,7 +116,7 @@ class LocationActivity : AppCompatActivity() {
             G.documents!!.clear()
             searchPlaces()
         }
-    }
+    }//oncreate ---------------------------------------------------------
 
 
     fun searchPlaces() {

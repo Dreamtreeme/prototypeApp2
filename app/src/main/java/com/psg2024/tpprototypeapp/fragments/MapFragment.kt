@@ -131,8 +131,8 @@ class MapFragment : Fragment() {
                 Toast.makeText(requireContext(), "${place.place_name}", Toast.LENGTH_SHORT).show()
                 val locationName : String = place.place_name
                 intent.putExtra("place",locationName)
-                G.pos.add(place.y)
-                G.pos.add(place.x)
+                intent.putExtra("y",place.y)
+                intent.putExtra("x",place.x)
 
 
 //                val json:String= Gson().toJson(place)
