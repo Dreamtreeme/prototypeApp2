@@ -2,6 +2,7 @@ package com.psg2024.tpprototypeapp.fragments
 
 import android.app.Notification.MessagingStyle.Message
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,58 +42,82 @@ class AddFriendFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.afBtn.setOnClickListener { Addfriend() }
+        binding.afBtn.setOnClickListener { addFriend() }
 
     }
 
-    private fun Addfriend(){
-        addID=binding.afTil.editText!!.text.toString()
+    private fun addFriend() {
+        val addID = binding.afTil.editText?.text.toString()
+
         when {
             addID.isEmpty() -> {
                 Toast.makeText(requireContext(), "ID를 입력해주세요.", Toast.LENGTH_SHORT).show()
                 return
             }
-            addID == G.userAccount!!.ID -> {
+            addID == G.userAccount?.ID -> {
                 Toast.makeText(requireContext(), "현재 ID는 입력하실 수 없습니다.", Toast.LENGTH_SHORT).show()
                 return
             }
             else -> {
-                // 다음 조건문 진행
+                // Firestore에서 현재 사용자의 친구 목록을 조회
+                Firebase.firestore.collection("MyFriends")
+                    .document(G.userAccount!!.ID)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        val friendsList = document.data?.get("friends") as? List<String> ?: listOf()
+                        if (addID in friendsList) {
+                            Toast.makeText(requireContext(), "이미 친구입니다.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            // Firestore에서 해당 ID를 가진 사용자 조회
+                            checkUserIdExists(addID)
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("AddFriend", "친구 목록 조회 실패", e)
+                    }
             }
         }
-
-        val userRef: CollectionReference = Firebase.firestore.collection("idUsers")
-        userRef.whereEqualTo("ID", addID).get().addOnSuccessListener {
-            if (it.documents.size > 0) {
-                val userFriend = Firebase.firestore.collection("friendUsers")
-                val user: MutableMap<String, String> = mutableMapOf()
-                user["ID"]= G.userAccount!!.ID
-                user["requestFriend"]= "true"
-                user["FriendId"]= addID
-                user["accept"]= "false"
-
-
-                userFriend.document().set(user).addOnSuccessListener {
-                    AlertDialog.Builder(requireContext()).setMessage("친구 추가 요청을 보냈습니다.")
-                        .setPositiveButton("확인", {p0, p1 -> }).show()
-                }// 친구요청을 보내면서 전역변수와 서버에 친구유무를 저장, 후에 친구 요청했을때
-                // 1)푸쉬알람, 2)푸쉬알람을 보고 내부 확인(xml만들어서 리사이클러뷰 만들기)해서 수락여부누르면 서버에 변수 바꾸기
-                // 3)친구 요청이 수락되어서 둘다 friend상태가 되면 전역변수에 유무 확인해서 친구목록 띄우기
-
-            }
-            else {
-                AlertDialog.Builder(requireContext()).setMessage("요청할 ID가 존재하지 않습니다")
-                    .setPositiveButton("확인", { p0, p1 -> }).show()
-            }
-        }
-
     }
 
+    private fun checkUserIdExists(addID: String) {
+        Firebase.firestore.collection("idUsers")
+            .whereEqualTo("ID", addID)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.documents.isNotEmpty()) {
+                    // 친구 추가 요청 생성
+                    createFriendRequest(G.userAccount!!.ID, addID)
+                } else {
+                    AlertDialog.Builder(requireContext())
+                        .setMessage("요청할 ID가 존재하지 않습니다")
+                        .setPositiveButton("확인", null)
+                        .show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("AddFriend", "사용자 ID 조회 실패", e)
+            }
+    }
 
+    private fun createFriendRequest(myId: String, friendId: String) {
+        val userFriend = Firebase.firestore.collection("friendUsers")
+        val request = hashMapOf(
+            "ID" to myId,
+            "FriendId" to friendId,
+            "accept" to "false"
+        )
 
-
-
-
+        userFriend.add(request)
+            .addOnSuccessListener {
+                AlertDialog.Builder(requireContext())
+                    .setMessage("친구 추가 요청을 보냈습니다.")
+                    .setPositiveButton("확인", null)
+                    .show()
+            }
+            .addOnFailureListener { e ->
+                Log.e("AddFriend", "친구 요청 전송 실패", e)
+            }
+    }
 
 
 

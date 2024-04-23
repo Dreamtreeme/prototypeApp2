@@ -41,7 +41,7 @@ class LocationActivity : AppCompatActivity() {
     var searchQuery:String = "서울시청"  //앱 초기 검색어
     // 2. 현재 내 위치 정보 객체 (위도, 경도 정보를 멤버로 보유)
     var myLocation: Location?=null
-    var searchLocation : Location? =null
+
 
     // [ Google Fused Location API 사용 : 라이브러리 play-sevices-location ]
 
@@ -113,7 +113,6 @@ class LocationActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
         binding.searchLocation.setOnClickListener {
             searchQuery = binding.searchBar.text.toString()
-            G.documents!!.clear()
             searchPlaces()
         }
     }//oncreate ---------------------------------------------------------

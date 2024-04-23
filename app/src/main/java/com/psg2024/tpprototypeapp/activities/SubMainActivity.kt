@@ -30,9 +30,25 @@ import java.util.Timer
 import java.util.TimerTask
 
 class SubMainActivity : AppCompatActivity() {
+    val handler = Handler(Looper.getMainLooper())
+    var runnable: Runnable? = null
+    fun runEvery60Seconds() {
+        runnable = Runnable {
+            // Fragment 재생성 코드
+            runOnUiThread {
+                requestMyLocation()
+                if(myLocation != null){
+                    supportFragmentManager.beginTransaction().replace(R.id.container_fragment3, SubMapFragment()).commit()
+                    updateLocationInFirestore()}
+            }
+            // 60초 후에 다시 runnable 실행
+            handler.postDelayed(runnable!!, 60000)
+        }
+        handler.postDelayed(runnable!!, 60000) // 60초 후에 runnable 실행
+
+    }
 
 
-    private val timer = Timer()
     val binding by lazy { ActivitySubMainBinding.inflate(layoutInflater) }
     // [ Google Fused Location API 사용 : 라이브러리 play-sevices-location ]
 
@@ -49,6 +65,8 @@ class SubMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
 
 
         //처음 보여질 프레그먼트를 화면에 붙이기
@@ -59,8 +77,10 @@ class SubMainActivity : AppCompatActivity() {
 
         binding.bnv.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.menu_bnv_map -> supportFragmentManager.beginTransaction()
-                    .replace(R.id.container_fragment3, SubMapFragment()).commit()
+                R.id.menu_bnv_map ->{
+                    updateLocationInFirestore()
+                    supportFragmentManager.beginTransaction()
+                    .replace(R.id.container_fragment3, SubMapFragment()).commit()}
 
                 R.id.menu_bnv_addfriend -> supportFragmentManager.beginTransaction()
                     .replace(R.id.container_fragment3, InviteFragment()).commit()
@@ -74,55 +94,43 @@ class SubMainActivity : AppCompatActivity() {
 
 
 
+        //퍼미션 요청 및 결과를 받아오는 작업을 대행하는 대행사를 등록
+        val permissionResultLauncher: ActivityResultLauncher<String> =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                if (it) requestMyLocation()
+                else Toast.makeText(this, "내 위치정보를 제공하지 않아서 검색기능 사용이 제한됩니다.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+        // 위치정보 제공에 대한 퍼미션 체크
+        val permissionState: Int =
+            checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        if (permissionState == PackageManager.PERMISSION_DENIED) {
+            //퍼미션을 요청하는 다이얼로그 보이고, 그 결과를 받아오는 작업을 대신해주는 대행사 이용
+            permissionResultLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            //위치정보수집이 허가되어 있다면.. 곧바로 위치정보 얻어오는 작업 시작
+            requestMyLocation()
+            Toast.makeText(this, "위치정보 얻어옴", Toast.LENGTH_SHORT).show()
+        }
+
+        if(myLocation != null){
+        updateLocationInFirestore()}
 
 
-        // GPS를 통해 위치를 가져오고 Firestore에 업데이트하는 메서드 호출
-        getLocationAndUpdateFirestore()
 
-        // Firestore의 필드값 변경 감지
-        listenToFirestoreChanges()
+        runEvery60Seconds()
+
+
+
 
 
     }// oncreate----------------------------------------------------
 
-    private fun listenToFirestoreChanges() {
-        var db = Firebase.firestore.collection(G.collectionName!!)
-            // Firestore에서 필드값 변경 감지
-            db.document()
-                .addSnapshotListener { snapshot, e ->
-                    if (e != null) {
-                        // 오류 처리
-                        return@addSnapshotListener
-                    }
-
-                    if (snapshot != null && snapshot.exists()) {
-                        // 서버의 좌표 가져와서 지도에 보여주는 로직 추가
-                        val latitude = snapshot.getDouble("latitude")
-                        val longitude = snapshot.getDouble("longitude")
-                        if (latitude != null && longitude != null) {
-                            // 서버의 좌표를 이용하여 지도에 표시
-                            // (지도에 표시하는 로직은 여기에 추가)
-                        }
-                    }
-                }
-
-    }
-
-    private fun getLocationAndUpdateFirestore() {
-        requestMyLocation()
-        G.pos[0]=myLocation!!.latitude.toString()
-        G.pos[1]=myLocation!!.longitude.toString()
-        updateLocationInFirestore()
-    }
 
 
-    //퍼미션 요청 및 결과를 받아오는 작업을 대행하는 대행사를 등록
-    val permissionResultLauncher: ActivityResultLauncher<String> =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) requestMyLocation()
-            else Toast.makeText(this, "내 위치정보를 제공하지 않아서 검색기능 사용이 제한됩니다.", Toast.LENGTH_SHORT)
-                .show()
-        }
+
+
 
     //위치정보 갱신때마다 발동하는 콜백 객체
     private val locationCallback = object : LocationCallback() {
@@ -137,6 +145,7 @@ class SubMainActivity : AppCompatActivity() {
 
         }
     }
+
 
     //현재 위치를 얻어오는 작업요청 코드가 있는 기능메소드
     private fun requestMyLocation() {
@@ -159,26 +168,17 @@ class SubMainActivity : AppCompatActivity() {
             locationCallback,
             Looper.getMainLooper()
         )
-        // 위치정보 제공에 대한 퍼미션 체크
-        val permissionState: Int =
-            checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        if (permissionState == PackageManager.PERMISSION_DENIED) {
-            //퍼미션을 요청하는 다이얼로그 보이고, 그 결과를 받아오는 작업을 대신해주는 대행사 이용
-            permissionResultLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        } else {
-            //위치정보수집이 허가되어 있다면.. 곧바로 위치정보 얻어오는 작업 시작
-            requestMyLocation()
-            Toast.makeText(this, "위치정보 얻어옴", Toast.LENGTH_SHORT).show()
-        }
+
+
 
     }
 
     private fun updateLocationInFirestore() {
-        var db = Firebase.firestore.collection(G.collectionName!!)
-        var userInformation: MutableMap<String, String> = mutableMapOf()
+        val db = Firebase.firestore.collection(G.collectionName!!)
+        val userInformation: MutableMap<String, String> = mutableMapOf()
         userInformation["ID"] = G.userAccount!!.ID
-        userInformation["Lat"] = G.pos[0]
-        userInformation["Long"] = G.pos[1]
+        userInformation["Lat"] = myLocation!!.latitude.toString()
+        userInformation["Long"] = myLocation!!.longitude.toString()
         db.document(G.userAccount!!.ID).set(userInformation).addOnSuccessListener {
             Toast.makeText(this, "위치가 등록되었습니다", Toast.LENGTH_SHORT).show()
         }

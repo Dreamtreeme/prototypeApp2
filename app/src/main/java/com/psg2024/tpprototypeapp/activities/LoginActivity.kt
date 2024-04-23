@@ -1,6 +1,9 @@
 package com.psg2024.tpprototypeapp.activities
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -10,6 +13,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.navercorp.nid.NaverIdLoginSDK
@@ -25,11 +30,11 @@ import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
+
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
 
         //회원가입 버튼 클릭
         binding.btnSignup.setOnClickListener {
@@ -37,6 +42,7 @@ class LoginActivity : AppCompatActivity() {
         }
         //이메일 로그인 버튼 클릭
         binding.btnLogin.setOnClickListener {
+
             startActivity(Intent(this, IdloginActivity::class.java))
         }
 
@@ -48,16 +54,23 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun clickKakao() {
 
-        // 두개의 로그인 요청 콜백함수
+
+
+
+
+
+
+
+
+
+    private fun clickKakao() {
         val callback:(OAuthToken?, Throwable?)->Unit = { token, error ->
             if(error != null) {
                 Toast.makeText(this, "카카오로그인 실패", Toast.LENGTH_SHORT).show()
             }else{
                 Toast.makeText(this, "카카오로그인 성공", Toast.LENGTH_SHORT).show()
 
-                //로그인이 성공하면 사용자 정보 요청
                 UserApiClient.instance.me { user, error ->
                     if(user!=null){
                         val id:String = user.id.toString()
@@ -65,16 +78,12 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this, "$id\n$nickname", Toast.LENGTH_SHORT).show()
                         G.userAccount = UserAccount(id, nickname)
 
-                        //로그인 되었으니..
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }
                 }
             }
-
         }
-
-        // 카카오톡이 사용가능하면 이를 이용하여 로그인하고 없으면 카카오톡계정으로 로그인하기
         if(UserApiClient.instance.isKakaoTalkLoginAvailable(this)){
                 UserApiClient.instance.loginWithKakaoTalk(this, callback = callback)
         }else{

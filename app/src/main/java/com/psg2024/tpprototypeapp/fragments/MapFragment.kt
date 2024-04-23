@@ -40,7 +40,6 @@ class MapFragment : Fragment() {
         // Fragment에서 Bundle 객체 가져오기
 
         // Bundle 객체에서 LatLng 객체 추출
-        val myPos = arguments?.getParcelable<LatLng>("pos")
         return binding.root
 
 
@@ -131,8 +130,10 @@ class MapFragment : Fragment() {
                 Toast.makeText(requireContext(), "${place.place_name}", Toast.LENGTH_SHORT).show()
                 val locationName : String = place.place_name
                 intent.putExtra("place",locationName)
-                intent.putExtra("y",place.y)
-                intent.putExtra("x",place.x)
+//                intent.putExtra("y",place.y)
+                G.pos.add(place.y)
+//                intent.putExtra("x",place.x)
+                G.pos.add(place.x)
 
 
 //                val json:String= Gson().toJson(place)

@@ -40,7 +40,7 @@ class SignupActivity : AppCompatActivity() {
         val userRef: CollectionReference = Firebase.firestore.collection("idUsers")
         userRef.whereEqualTo("ID" , ID).get().addOnSuccessListener {
             if (it.documents.size > 0) {
-                AlertDialog.Builder(this).setMessage("중복된 ID가 있습니다. 다시 확인하여 입력해주시기 바람니다.").create()
+                AlertDialog.Builder(this).setMessage("중복된 ID가 있습니다. 다시 확인하여 입력해주시기 바랍니다.").setPositiveButton("확인", { _, _ ->  }).create()
                     .show()
                 binding.inputLayoutID.editText!!.requestFocus()
                 binding.inputLayoutID.editText!!.selectAll()

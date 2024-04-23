@@ -43,6 +43,9 @@ class MakeRoomActivity : AppCompatActivity() {
 
 
 
+
+
+
         // 선택된 날짜 처리
 
 
@@ -80,7 +83,8 @@ class MakeRoomActivity : AppCompatActivity() {
     private fun makeCollection() {
         val s =binding.receiveLocation.text.toString()
         val now = Instant.now().toEpochMilli().toString()
-        G.collectionName = G.userAccount!!.ID+s+now
+        G.collectionName = G.userAccount?.ID+s+now
+        Toast.makeText(this, "${G.collectionName}", Toast.LENGTH_SHORT).show()
 
     }
 }

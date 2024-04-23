@@ -6,3 +6,5 @@ data class docmentsID(var ID: String)
 
 
 data class FriendRequestID(var ID:String)
+
+data class FriendListID(val ID: String)

@@ -6,11 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelLayer
@@ -25,8 +30,12 @@ import com.psg2024.tpprototypeapp.activities.MainActivity
 import com.psg2024.tpprototypeapp.activities.PlaceDetailActivity
 import com.psg2024.tpprototypeapp.data.Place
 import com.psg2024.tpprototypeapp.databinding.FragmentPlaceMapBinding
+import java.util.Timer
+import java.util.TimerTask
 
 class SubMapFragment : Fragment() {
+
+
 
 
     private val binding : FragmentPlaceMapBinding by lazy { FragmentPlaceMapBinding.inflate(layoutInflater) }
@@ -43,83 +52,97 @@ class SubMapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //카카오 지도 start
-        binding.mapView.start(mapReadyCallback)
+        binding.mapView2.start(mapReadyCallback)
+
 
     }
+
+
+
+
 
 
     private val mapReadyCallback : KakaoMapReadyCallback = object : KakaoMapReadyCallback(){
         override fun onMapReady(kakaoMap: KakaoMap) {
 
             //목적지를 지도 중심으로 설정
-            val latitude: Double= G.pos[0].toDouble() ?: 37.5666 //비동기는 null이 올수 있으니 non nullable 쓰는걸 비추
+            val latitude: Double =
+                G.pos[0].toDouble() ?: 37.5666 //비동기는 null이 올수 있으니 non nullable 쓰는걸 비추
             val longitude: Double = G.pos[1].toDouble() ?: 126.9782
-            val myPos : LatLng = LatLng.from(latitude, longitude)
+            val thatPos: LatLng = LatLng.from(latitude, longitude)
 
 
             // 내위치를 얻어왔으면 지도 카메라를 이동
-            val cameraUpdate : CameraUpdate = CameraUpdateFactory.newCenterPosition(myPos, 16)
+            val cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(thatPos, 16)
             kakaoMap.moveCamera(cameraUpdate)
 
             // 내 위치에 대한 마커를 추가하기
-            val labelOptions : LabelOptions = LabelOptions.from(myPos).setStyles(R.drawable.ic_mypin) //백터 그래픽 이미지는 안됨 png로 써야함
+            val labelOptions: LabelOptions =
+                LabelOptions.from(thatPos).setStyles(R.drawable.ic_mypin) //백터 그래픽 이미지는 안됨 png로 써야함
             // 라벨이 그려질 레이어 객체 소환
             val labelLayer: LabelLayer = kakaoMap.labelManager!!.layer!!
             labelLayer.addLabel(labelOptions)
 
+            val db = Firebase.firestore.collection(G.collectionName!!)
+            db.document(G.userAccount!!.ID).get().addOnSuccessListener {
+                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+//            val latitude2  = it.get("Lat").toString().toDouble()
+//            val longitude2 = it.get("Long").toString().toDouble()
+//            val newPos: LatLng = LatLng.from(latitude2, longitude2)
+//            val options2 = LabelOptions.from(newPos).setStyles(R.drawable.ic_pin)
+//                .setTexts(it.id, "${it.id}님의 위치입니다.").setTag(it)
+//            kakaoMap.labelManager!!.layer!!.addLabel(options2)
+            }
 
-//            val placeList :List<Place>? = (activity as MainActivity).searchPlaceResponse?.documents
-//            placeList?.forEach{
-//
-//                val pos = LatLng.from(it.y.toDouble(), it.x.toDouble())
-//                val options = LabelOptions.from(pos).setStyles(R.drawable.ic_pin).setTexts(it.place_name, "${it.distance}m").setTag(it)
-//                kakaoMap.labelManager!!.layer!!.addLabel(options)
-//
-//            }//forEach
-//
-//            // 라벨 클릭에 반응하기
-//            kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
-//
-//                label.apply {
-//                    //정보창 [infowindow] 보여주기
-//                    val layout = GuiLayout(Orientation.Vertical)
-//                    layout.setPadding(16,16,16,16)
-//                    layout.setBackground(R.drawable.base_msg,true)
-//
-//                    texts.forEach {
-//                        val guiText=GuiText(it)
-//                        guiText.setTextSize(30)
-//                        guiText.setTextColor(Color.WHITE)
-//                        layout.addView(guiText)
-//                    }//forEach
-//                    // [정보창 info window] 객체 만들기
-//                    val options: InfoWindowOptions= InfoWindowOptions.from(position)
-//                    options.body= layout
-//                    options.setBodyOffset(0f, -10f)
-//                    options.setTag(tag)
-//
-//                    kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
-//                    kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(options)
-//
-//                }//apply..
-//
-//
-//            }//label click
-//
-//            //[정보창 클릭에 반응하기
-//            kakaoMap.setOnInfoWindowClickListener { kakaoMap, infoWindow, guiId ->
-//                //장소에 대한 상세 소개 웹페이지를 보여주는 화면으로 이동
-//                val intent = Intent(requireContext(), PlaceDetailActivity::class.java)
-//
-//                // 클릭한 장소에 대한 정보를 json문자열로 변환하여 전달해주기
-//                val place=infoWindow.tag as Place
-//                val json:String= Gson().toJson(place)
-//                intent.putExtra("place", json)
-//
-//                startActivity(intent)
-//            }
+
+
+            // Firestore에서 필드값 변경 감지
+            db.addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    // 오류 처리
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && !snapshot.isEmpty)
+                    snapshot.forEach {
+                        // 서버의 좌표 가져와서 지도에 보여주는 로직 추가
+                        val latitude3  = it.get("Lat").toString().toDouble()
+                        val longitude3 = it.get("Long").toString().toDouble()
+                        val newPos2= LatLng.from(latitude3, longitude3)
+                        val options3 = LabelOptions.from(newPos2).setStyles(R.drawable.ic_pin)
+                            .setTexts(it.id, "${it.id}님의 위치입니다.").setTag(it)
+                        kakaoMap.labelManager!!.layer!!.addLabel(options3)
+                    }
+
+            }
+            // 라벨 클릭에 반응하기
+            kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
+
+                label.apply {
+                    //정보창 [infowindow] 보여주기
+                    val layout = GuiLayout(Orientation.Vertical)
+                    layout.setPadding(16, 16, 16, 16)
+                    layout.setBackground(R.drawable.base_msg, true)
+
+                    texts.forEach {
+                        val guiText = GuiText(it)
+                        guiText.setTextSize(30)
+                        guiText.setTextColor(Color.WHITE)
+                        layout.addView(guiText)
+                    }//forEach
+                    // [정보창 info window] 객체 만들기
+                    val options: InfoWindowOptions = InfoWindowOptions.from(position)
+                    options.body = layout
+                    options.setBodyOffset(0f, -10f)
+                    options.setTag(tag)
+
+                    kakaoMap.mapWidgetManager!!.infoWindowLayer.removeAll()
+                    kakaoMap.mapWidgetManager!!.infoWindowLayer.addInfoWindow(options)
+
+                }//apply..
+            }
+
+
         }
-
-
     }
 }
