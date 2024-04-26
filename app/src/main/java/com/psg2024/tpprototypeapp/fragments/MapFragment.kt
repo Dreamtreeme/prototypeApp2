@@ -75,11 +75,11 @@ class MapFragment : Fragment() {
             kakaoMap.moveCamera(cameraUpdate)
 
 
-            // 내 위치에 대한 마커를 추가하기
-            val labelOptions : LabelOptions = LabelOptions.from(myPos).setStyles(R.drawable.ic_mypin) //백터 그래픽 이미지는 안됨 png로 써야함
-            // 라벨이 그려질 레이어 객체 소환
-            val labelLayer: LabelLayer = kakaoMap.labelManager!!.layer!!
-            labelLayer.addLabel(labelOptions)
+//            // 내 위치에 대한 마커를 추가하기
+//            val labelOptions : LabelOptions = LabelOptions.from(myPos).setStyles(R.drawable.ic_mypin) //백터 그래픽 이미지는 안됨 png로 써야함
+//            // 라벨이 그려질 레이어 객체 소환
+//            val labelLayer: LabelLayer = kakaoMap.labelManager!!.layer!!
+//            labelLayer.addLabel(labelOptions)
 
 
             val placeList :List<Place>? = (activity as LocationActivity).searchPlaceResponse?.documents
