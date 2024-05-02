@@ -28,7 +28,7 @@ class G{
 
         var pos : ArrayList<String> = arrayListOf()
 
-        var friendList: LinkedHashSet<String> = LinkedHashSet()
+        var friendList: MutableList<String> = mutableListOf()
 
 
 

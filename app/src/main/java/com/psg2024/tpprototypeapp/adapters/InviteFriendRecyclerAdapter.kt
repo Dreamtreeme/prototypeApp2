@@ -1,35 +1,42 @@
 package com.psg2024.tpprototypeapp.adapters
 
 import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.psg2024.tpprototypeapp.G
-import com.psg2024.tpprototypeapp.data.FriendListID
-import com.psg2024.tpprototypeapp.data.FriendRequestID
-import com.psg2024.tpprototypeapp.databinding.RecyclerItemListFragmentBinding
+import com.psg2024.tpprototypeapp.databinding.RecyclerItemFriendListBinding
 
-class InviteFriendRecyclerAdapter(val context: Context, val documents : List<FriendListID>):
+class InviteFriendRecyclerAdapter(val context: Context, val documents: MutableList<String>):
     RecyclerView.Adapter<InviteFriendRecyclerAdapter.VH>() {
-    inner class VH(val binding: RecyclerItemListFragmentBinding) : RecyclerView.ViewHolder(binding.root)
-    //firebase로 친구목록을 불러와서 리사이클러뷰로 보여주는 어댑터
-    //firebase 객체 만들기
-    val myId = G.userAccount?.ID
-    val firestore = Firebase.firestore
+    inner class VH(val binding: RecyclerItemFriendListBinding) : RecyclerView.ViewHolder(binding.root)
 
-    //친구목록을 불러오는 함수
-    fun getFriendList() {
-        firestore.collection("MyFriends").document(myId!!)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val friends = document.data?.get("friends") as List<String>
-                    //친구목록을 리사이클러뷰로 보여주기
-                    showFriendList(friends)
-                }
-            }
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val layoutInflater = LayoutInflater.from(context)
+        val binding = RecyclerItemFriendListBinding.inflate(layoutInflater, parent, false)
+        return VH(binding)
     }
 
+    override fun getItemCount(): Int {
+        return documents.size
+    }
+
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        val friendID = documents[position]
+
+        holder.binding.tvRequest.text = "${friendID} 님"
+        holder.binding.cbRequest.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                G.friendList.add(friendID)
+            } else {
+                G.friendList.remove(friendID)
+            }
+        }
+    }
 
 
 }

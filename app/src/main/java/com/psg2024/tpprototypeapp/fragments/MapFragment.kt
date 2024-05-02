@@ -63,6 +63,8 @@ class MapFragment : Fragment() {
     private val mapReadyCallback : KakaoMapReadyCallback = object : KakaoMapReadyCallback(){
         override fun onMapReady(kakaoMap: KakaoMap) {
 
+            //지도가 준비되면 호출되는 콜백 메서드
+            G.documents ?: return
 
             //현재 내 위치를 지도의 중심위치로 설정
             val latitude: Double= G.documents!!.get(0).y.toDouble() ?: 37.5666 //비동기는 null이 올수 있으니 non nullable 쓰는걸 비추
