@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.psg2024.tpprototypeapp.G
+import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.adapters.InviteFriendRecyclerAdapter
 import com.psg2024.tpprototypeapp.databinding.FragmentInviteFriendBinding
 
@@ -22,7 +24,7 @@ class InviteFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding= FragmentInviteFriendBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -34,10 +36,28 @@ class InviteFragment : Fragment() {
             binding.ifRecyclerView.adapter = InviteFriendRecyclerAdapter(requireContext(), G.friendList)
             binding.ifRecyclerView.adapter!!.notifyDataSetChanged()
         }
+        binding.ifBtn.setOnClickListener {
+            val invite: MutableMap<String, String> = mutableMapOf()
+            invite["초대보낸사람"] = myId!!
+            invite["수락여부"]= "대기중"
+            invite["초대된 방"]= G.collectionName!!
+
+            G.inviteList.forEach {
+                firestore.collection("InviteFriendlist").document(it).set(invite)
+            }
+            Toast.makeText(requireContext(), "초대가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            //초대가 완료되면 초대목록을 비워준다.
+            G.inviteList.clear()
+            //SubMainActivity에 있는 바텀네비게이션뷰 지도 버튼누르기
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container_fragment3, InviteFragment()).commit()
+
+
+        }
 
     }
     //친구목록을 불러오는 함수
-    fun getFriendList() {
+    private fun getFriendList() {
         firestore.collection("MyFriends").document(myId!!)
             .get()
             .addOnSuccessListener { document ->

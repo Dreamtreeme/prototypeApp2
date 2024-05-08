@@ -31,9 +31,9 @@ class InviteFriendRecyclerAdapter(val context: Context, val documents: MutableLi
         holder.binding.tvRequest.text = "${friendID} 님"
         holder.binding.cbRequest.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                G.friendList.add(friendID)
+                G.inviteList.add(friendID)
             } else {
-                G.friendList.remove(friendID)
+                G.inviteList.remove(friendID)
             }
         }
     }

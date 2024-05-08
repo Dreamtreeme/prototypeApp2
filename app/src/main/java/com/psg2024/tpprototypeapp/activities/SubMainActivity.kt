@@ -1,6 +1,7 @@
 package com.psg2024.tpprototypeapp.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -10,9 +11,11 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
@@ -30,6 +33,7 @@ import java.util.Timer
 import java.util.TimerTask
 
 class SubMainActivity : AppCompatActivity() {
+
     val handler = Handler(Looper.getMainLooper())
     var runnable: Runnable? = null
     fun runEvery60Seconds() {
@@ -65,7 +69,18 @@ class SubMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.toolbar.setNavigationOnClickListener {
+            AlertDialog.Builder(this).setMessage("방을 나가시겠습니까?").setNegativeButton("취소"){_,_->}.setPositiveButton("확인"){_,_->
+                //sharedPreferences 정보 삭제
+                deleteSharedPreferences(this, "collectionName")
+                //방을 나가면 앱 완전히 꺼지게하고 그 전에 firestore에서 위치정보 삭제
+                val db = Firebase.firestore.collection(G.collectionName!!)
+                db.document(G.userAccount!!.ID).delete()
+                finishAffinity()}
+
+        }
+
+
 
 
 
@@ -78,9 +93,11 @@ class SubMainActivity : AppCompatActivity() {
         binding.bnv.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.menu_bnv_map ->{
-                    updateLocationInFirestore()
+                    requestMyLocation()
+                    if(myLocation != null){
+                        updateLocationInFirestore()
                     supportFragmentManager.beginTransaction()
-                    .replace(R.id.container_fragment3, SubMapFragment()).commit()}
+                    .replace(R.id.container_fragment3, SubMapFragment()).commit()}}
 
                 R.id.menu_bnv_addfriend -> supportFragmentManager.beginTransaction()
                     .replace(R.id.container_fragment3, InviteFragment()).commit()
@@ -117,34 +134,15 @@ class SubMainActivity : AppCompatActivity() {
         if(myLocation != null){
         updateLocationInFirestore()}
 
-
-
         runEvery60Seconds()
-
-
-
-
 
     }// oncreate----------------------------------------------------
 
-
-
-
-
-
-    //위치정보 갱신때마다 발동하는 콜백 객체
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(p0: LocationResult) {
-            super.onLocationResult(p0)
-
-            myLocation = p0.lastLocation
-
-            //위치 탐색이 종료되었으니 내 위치정보 업데이트를 이제 그만..
-            LocationProviderClient.removeLocationUpdates(this)//this:locationCallback 객체
-
-
-        }
+    private fun updateLocationInFirestore() {
+        val db = Firebase.firestore.collection(G.collectionName!!)
+        db.document(G.userAccount!!.ID).update("Lat", myLocation!!.latitude, "Long", myLocation!!.longitude)
     }
+
 
 
     //현재 위치를 얻어오는 작업요청 코드가 있는 기능메소드
@@ -165,7 +163,7 @@ class SubMainActivity : AppCompatActivity() {
         }
         LocationProviderClient.requestLocationUpdates(
             request,
-            locationCallback,
+            locationListener(),
             Looper.getMainLooper()
         )
 
@@ -173,18 +171,45 @@ class SubMainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateLocationInFirestore() {
-        val db = Firebase.firestore.collection(G.collectionName!!)
-        val userInformation: MutableMap<String, String> = mutableMapOf()
-        userInformation["ID"] = G.userAccount!!.ID
-        userInformation["Lat"] = myLocation!!.latitude.toString()
-        userInformation["Long"] = myLocation!!.longitude.toString()
-        db.document(G.userAccount!!.ID).set(userInformation).addOnSuccessListener {
-            Toast.makeText(this, "위치가 등록되었습니다", Toast.LENGTH_SHORT).show()
+    fun deleteSharedPreferences(context: Context, key: String) {
+        val sharedPreferences = context.getSharedPreferences("YOUR_APP_NAME", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove(key)
+        editor.apply() // 비동기적으로 삭제
+        // editor.commit() // 동기적으로 삭제 (더 느릴 수 있지만, 데이터 손실 가능성이 낮음)
+    }
+
+
+
+
+    private fun locationListener(): LocationListener = object: LocationListener {
+        override fun onLocationChanged(location: Location) {
+
+            val result: FloatArray = floatArrayOf(0.0f, 0.0f, 0.0f)//3칸짜리 빈 배열 준비 --이 배열안에 계산결과를 넣어줌
+            myLocation = location
+            Location.distanceBetween(myLocation!!.latitude,myLocation!!.longitude , G.pos[0].toDouble(), G.pos[1].toDouble(), result)
+            //위치 갱신이 끝났으니 종료
+            LocationProviderClient.removeLocationUpdates(this)
+            //result[0] 에 두 지점의 거리를 m미터 단위로 계산하여 가지고 있음.
+            if(result[0]<50) {//두 지점의 거리가 50m이내
+                if(wasEnter==false){
+                    AlertDialog.Builder(this@SubMainActivity).setMessage("목적지에 도착하셨습니다!").setPositiveButton("OK", null).create().show()
+                    wasEnter=true
+                }
+
+
+            }else{
+                wasEnter = false
+            }
+
         }
 
 
     }
+    var wasEnter = false
+
+
+
 
 
 

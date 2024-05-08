@@ -3,6 +3,7 @@ package com.psg2024.tpprototypeapp.activities
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -34,7 +35,11 @@ class MakeRoomActivity : AppCompatActivity() {
         binding.receiveLocation.text= s
         binding.goSubMain.setOnClickListener {
             makeCollection()
+            setLocationInFirestore()
             finish()
+            //sharedPreferences에 G.collectionName 저장
+            saveSharedPreferences(this, "collectionName", G.collectionName!!)
+
             startActivity(Intent(this, SubMainActivity::class.java))
             }
 
@@ -83,8 +88,43 @@ class MakeRoomActivity : AppCompatActivity() {
     private fun makeCollection() {
         val s =binding.receiveLocation.text.toString()
         val now = Instant.now().toEpochMilli().toString()
-        G.collectionName = G.userAccount?.ID+s+now
+        G.collectionName = G.userAccount?.ID+","+s+","+now
         Toast.makeText(this, "${G.collectionName}", Toast.LENGTH_SHORT).show()
 
     }
+
+    private fun setLocationInFirestore() {
+        val db = Firebase.firestore.collection(G.collectionName!!)
+        val userInformation: MutableMap<String, Any> = mutableMapOf()
+        userInformation["ID"] = G.userAccount!!.ID
+        userInformation["Lat"] =0
+        userInformation["Long"] =0
+        userInformation["LoLat"] = G.pos[0]
+        userInformation["LoLong"] = G.pos[1]
+        db.document(G.userAccount!!.ID).set(userInformation).addOnSuccessListener {
+            Toast.makeText(this, "위치가 등록되었습니다", Toast.LENGTH_SHORT).show()
+
+        }
+
+
+    }
+
+    fun saveSharedPreferences(context: Context, key: String, value: Any) {
+        val sharedPreferences = context.getSharedPreferences("YOUR_APP_NAME", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        when (value) {
+            is String -> editor.putString(key, value)
+            is Int -> editor.putInt(key, value)
+            is Boolean -> editor.putBoolean(key, value)
+            is Float -> editor.putFloat(key, value)
+            is Long -> editor.putLong(key, value)
+            else -> throw IllegalArgumentException("Unsupported value type: ${value.javaClass}")
+        }
+
+        editor.apply() // 비동기적으로 저장
+        // editor.commit() // 동기적으로 저장 (더 느릴 수 있지만, 데이터 손실 가능성이 낮음)
+    }
+
+
 }

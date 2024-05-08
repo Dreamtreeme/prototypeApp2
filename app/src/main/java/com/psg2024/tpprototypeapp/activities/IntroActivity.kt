@@ -16,6 +16,7 @@ class IntroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
 
+
         //1.5초 후에 로그인화면으로 이동
         Handler(Looper.getMainLooper()).postDelayed({
           startActivity(Intent(this, LoginActivity::class.java))

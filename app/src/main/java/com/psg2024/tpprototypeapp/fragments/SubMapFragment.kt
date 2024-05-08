@@ -3,6 +3,7 @@ package com.psg2024.tpprototypeapp.fragments
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,11 +52,16 @@ class SubMapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         //카카오 지도 start
+        Log.d("위도경도", "${G.pos[0].toDouble()} ${G.pos[1].toDouble()}")
         binding.mapView2.start(mapReadyCallback)
 
 
     }
+    val db = Firebase.firestore.collection(G.collectionName!!)
+
+
 
 
 
@@ -78,23 +84,13 @@ class SubMapFragment : Fragment() {
 
             // 내 위치에 대한 마커를 추가하기
             val labelOptions: LabelOptions =
-                LabelOptions.from(thatPos).setStyles(R.drawable.ic_mypin) //백터 그래픽 이미지는 안됨 png로 써야함
+                LabelOptions.from(thatPos).setStyles(R.drawable.ic_mypin).setTexts(//목적지 위치
+                    "목적지",
+                    "${G.collectionName!!.split(",")[1]}"
+                )
             // 라벨이 그려질 레이어 객체 소환
             val labelLayer: LabelLayer = kakaoMap.labelManager!!.layer!!
             labelLayer.addLabel(labelOptions)
-
-            val db = Firebase.firestore.collection(G.collectionName!!)
-            db.document(G.userAccount!!.ID).get().addOnSuccessListener {
-                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-//            val latitude2  = it.get("Lat").toString().toDouble()
-//            val longitude2 = it.get("Long").toString().toDouble()
-//            val newPos: LatLng = LatLng.from(latitude2, longitude2)
-//            val options2 = LabelOptions.from(newPos).setStyles(R.drawable.ic_pin)
-//                .setTexts(it.id, "${it.id}님의 위치입니다.").setTag(it)
-//            kakaoMap.labelManager!!.layer!!.addLabel(options2)
-            }
-
-
 
             // Firestore에서 필드값 변경 감지
             db.addSnapshotListener { snapshot, e ->
