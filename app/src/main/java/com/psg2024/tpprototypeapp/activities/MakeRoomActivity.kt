@@ -24,6 +24,8 @@ import java.util.Date
 
 class MakeRoomActivity : AppCompatActivity() {
     val binding by lazy { ActivityMakeRoomBinding.inflate(layoutInflater) }
+    var datetomili: Long = 0
+    var timetomili: Long = 0
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +65,8 @@ class MakeRoomActivity : AppCompatActivity() {
 
             datePicker.show(supportFragmentManager, "date")
             datePicker.addOnPositiveButtonClickListener {
+                datetomili = it
+                Toast.makeText(this, "$datetomili", Toast.LENGTH_SHORT).show()
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
                 val dateString = sdf.format(Date(it))
                 binding.viewDate.setText(dateString)
@@ -77,6 +81,10 @@ class MakeRoomActivity : AppCompatActivity() {
 
                 timePicker.show(supportFragmentManager, "time")
                 timePicker.addOnPositiveButtonClickListener { it ->
+                    // 시간 선택 완료시 선택한 시간 밀리초로받기
+                    val t = timePicker.hour.toLong()*60*60*1000
+                    val t2 = timePicker.minute.toLong()*60*1000
+                    timetomili= t+t2
                     val period = if (timePicker.hour < 12) "오전" else "오후"
                     val hour = if (timePicker.hour == 0 || timePicker.hour == 12) 12 else timePicker.hour % 12
                     binding.viewTime.text = "$period ${hour}시 ${timePicker.minute}분"
@@ -87,8 +95,8 @@ class MakeRoomActivity : AppCompatActivity() {
 
     private fun makeCollection() {
         val s =binding.receiveLocation.text.toString()
-        val now = Instant.now().toEpochMilli().toString()
-        G.collectionName = G.userAccount?.ID+","+s+","+now
+        val apointmentTime = (timetomili+datetomili).toString()
+        G.collectionName = G.userAccount?.ID+","+s+","+apointmentTime
         Toast.makeText(this, "${G.collectionName}", Toast.LENGTH_SHORT).show()
 
     }

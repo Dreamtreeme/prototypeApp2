@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.gson.Gson
+import com.psg2024.tpprototypeapp.G
 import com.psg2024.tpprototypeapp.activities.PlaceDetailActivity
 import com.psg2024.tpprototypeapp.data.Place
+import com.psg2024.tpprototypeapp.data.Rank
 import com.psg2024.tpprototypeapp.databinding.RecyclerItemListFragmentBinding
 
-class PlaceListRecyclerAdapter(val context: Context, val documents: List<Place>) :Adapter<PlaceListRecyclerAdapter.VH>() {
-    inner class VH(val binding: RecyclerItemListFragmentBinding) :ViewHolder(binding.root)
+class RankListRecyclerAdapter(val context: Context, val documents: MutableList<Rank>) : Adapter<RankListRecyclerAdapter.VH>(){
+    open inner class VH(val binding: RecyclerItemListFragmentBinding) :ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val layoutInflater = LayoutInflater.from(context)
@@ -25,22 +27,27 @@ class PlaceListRecyclerAdapter(val context: Context, val documents: List<Place>)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val place: Place =documents[position]
+        val rank : Rank =documents[position]
+        val arrivalTime = rank.arrivalTime.toLong()
+        val appointTime=G.collectionName!!.split(",")[2].toLong()
+        var yourArrivalTime=appointTime-arrivalTime
+        if(yourArrivalTime<0) {
+            //밀리초 -> 시간+"시간"+(나머지시간 분으로변환)+"분" 으로변환 단 시간이 1 이하면 0시간으로 표시, 남은 분이 1분 이하면 0분으로 표시
+            //양수로 변환
+            yourArrivalTime*=-1
+            val hour = Math.floor(((yourArrivalTime / 3600000).toDouble())).toInt()
+            val minute = Math.floor(((yourArrivalTime % 3600000) / 60000).toDouble()).toInt()
+            holder.binding.tvWhen.text = "도착시간 보다 ${hour}시간 ${minute}분 빨리 도착하셨습니다. "
+        }else if(yourArrivalTime>0){
+            val hour = Math.floor(((yourArrivalTime / 3600000).toDouble())).toInt()
+            val minute = Math.floor(((yourArrivalTime % 3600000) / 60000).toDouble()).toInt()
+            holder.binding.tvWhen.text = "도착시간 보다 ${hour}시간 ${minute}분 늦게 도착하셨습니다. "}
 
-        holder.binding.tvPlaceName.text = place.place_name
-        holder.binding.tvAddress.text = if(place.road_address_name=="") place.address_name else place.road_address_name
-        holder.binding.tvDistance.text = "${place.distance}m"
-        // 아이템뷰를 클릭하였을때 상세정보페이지 url 을 보여주는 화면으로 이동
-        holder.binding.root.setOnClickListener {
-            val intent= Intent(context, PlaceDetailActivity::class.java)
 
-            //장소정보에 대한 데이터를 추가로 보내기 [ 객체는 추가데이터로 전송불가 --> json문자열로 변환 ]
-            val gson= Gson()
-            val s:String = gson.toJson(place) //객체 --> json string
-            intent.putExtra("place", s)
+        holder.binding.tvRank.text = rank.rank
 
-            context.startActivity(intent)
-        }
+        holder.binding.tvId.text = rank.id
+
     }
 
 }

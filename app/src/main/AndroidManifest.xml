@@ -67,7 +67,7 @@
             android:name=".activities.PlaceDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.MainActivity2"
             android:exported="false" /> <!-- 카카오 로그인 리다이렉트 화면 -->
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
@@ -88,13 +88,6 @@
             android:name="com.kakao.vectormap.APP_KEY"
             android:value="d6b81d530b8befbab4521cd32233df21" />
 
-        <service
-            android:name=".network.MyFirebaseMessagingService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

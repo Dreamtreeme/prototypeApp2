@@ -8,15 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.mapwidget.InfoWindowOptions
 import com.kakao.vectormap.mapwidget.component.GuiLayout
@@ -25,9 +21,7 @@ import com.kakao.vectormap.mapwidget.component.Orientation
 import com.psg2024.tpprototypeapp.G
 import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.activities.LocationActivity
-import com.psg2024.tpprototypeapp.activities.MainActivity
 import com.psg2024.tpprototypeapp.activities.MakeRoomActivity
-import com.psg2024.tpprototypeapp.activities.PlaceDetailActivity
 import com.psg2024.tpprototypeapp.data.Place
 import com.psg2024.tpprototypeapp.databinding.FragmentMapBinding
 

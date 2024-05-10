@@ -27,7 +27,6 @@ import com.psg2024.tpprototypeapp.data.Place
 import com.psg2024.tpprototypeapp.data.PlaceMeta
 import com.psg2024.tpprototypeapp.databinding.ActivityLocationBinding
 import com.psg2024.tpprototypeapp.fragments.MapFragment
-import com.psg2024.tpprototypeapp.fragments.PlaceListFragment
 import com.psg2024.tpprototypeapp.network.RetrofitHelper
 import com.psg2024.tpprototypeapp.network.RetrofitService
 import retrofit2.Call

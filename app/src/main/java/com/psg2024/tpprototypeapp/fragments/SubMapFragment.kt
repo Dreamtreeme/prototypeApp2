@@ -1,22 +1,17 @@
 package com.psg2024.tpprototypeapp.fragments
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelLayer
@@ -27,12 +22,7 @@ import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
 import com.psg2024.tpprototypeapp.G
 import com.psg2024.tpprototypeapp.R
-import com.psg2024.tpprototypeapp.activities.MainActivity
-import com.psg2024.tpprototypeapp.activities.PlaceDetailActivity
-import com.psg2024.tpprototypeapp.data.Place
 import com.psg2024.tpprototypeapp.databinding.FragmentPlaceMapBinding
-import java.util.Timer
-import java.util.TimerTask
 
 class SubMapFragment : Fragment() {
 

@@ -78,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this, "$id\n$nickname", Toast.LENGTH_SHORT).show()
                         G.userAccount = UserAccount(id, nickname)
 
-                        startActivity(Intent(this, MainActivity::class.java))
+                        startActivity(Intent(this, MainActivity2::class.java))
                         finish()
                     }
                 }
@@ -116,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
         G.userAccount= UserAccount(id, email)
 
         //main 화면으로 이동
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, MainActivity2::class.java))
         finish()
     }
 
@@ -151,7 +151,7 @@ class LoginActivity : AppCompatActivity() {
                         val s= response.body()
                         AlertDialog.Builder(this@LoginActivity).setMessage(s).create().show()
 
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        startActivity(Intent(this@LoginActivity, MainActivity2::class.java))
                         finish()
                     }
 

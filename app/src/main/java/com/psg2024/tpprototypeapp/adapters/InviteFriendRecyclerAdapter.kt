@@ -3,6 +3,7 @@ package com.psg2024.tpprototypeapp.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -19,7 +20,9 @@ class InviteFriendRecyclerAdapter(val context: Context, val documents: MutableLi
         val layoutInflater = LayoutInflater.from(context)
         val binding = RecyclerItemFriendListBinding.inflate(layoutInflater, parent, false)
         return VH(binding)
+
     }
+
 
     override fun getItemCount(): Int {
         return documents.size

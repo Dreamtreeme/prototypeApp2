@@ -82,8 +82,6 @@ class SubMainActivity : AppCompatActivity() {
 
 
 
-
-
         //처음 보여질 프레그먼트를 화면에 붙이기
         supportFragmentManager.beginTransaction().add(R.id.container_fragment3, SubMapFragment())
             .commit()
@@ -176,7 +174,10 @@ class SubMainActivity : AppCompatActivity() {
         editor.remove(key)
         editor.apply() // 비동기적으로 삭제
         // editor.commit() // 동기적으로 삭제 (더 느릴 수 있지만, 데이터 손실 가능성이 낮음)
+
     }
+
+    //위치정보가 갱신되면 호출되는 콜백 리스너 객체
 
 
 
@@ -203,7 +204,7 @@ class SubMainActivity : AppCompatActivity() {
 
                         // 문서를 생성하고 등수, 아이디, 도착시간 정보 저장
                     ranksCollection.get().addOnSuccessListener { snapshot ->
-                        
+
                         if (snapshot!!.size() == 0) {
                             val rank =1
                             val id = G.userAccount!!.ID

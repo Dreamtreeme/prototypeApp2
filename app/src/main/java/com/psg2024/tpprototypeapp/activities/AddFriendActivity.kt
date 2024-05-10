@@ -1,30 +1,16 @@
 package com.psg2024.tpprototypeapp.activities
 
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.app.NotificationCompat
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging
 import com.psg2024.tpprototypeapp.G
 import com.psg2024.tpprototypeapp.G.Companion.FriendRequestList
-import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.adapters.AddfriendAdapter
 import com.psg2024.tpprototypeapp.data.FriendRequestID
 import com.psg2024.tpprototypeapp.databinding.ActivityAddFriendBinding
-import com.psg2024.tpprototypeapp.network.MyFirebaseMessagingService
 
 class AddFriendActivity : AppCompatActivity() {
 

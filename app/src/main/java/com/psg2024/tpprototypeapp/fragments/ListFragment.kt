@@ -14,6 +14,8 @@ import com.google.firebase.ktx.Firebase
 import com.psg2024.tpprototypeapp.G
 import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.activities.SubMainActivity
+import com.psg2024.tpprototypeapp.adapters.RankListRecyclerAdapter
+import com.psg2024.tpprototypeapp.data.Rank
 import com.psg2024.tpprototypeapp.databinding.FragmentListBinding
 
 class ListFragment : Fragment() {
@@ -34,6 +36,19 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val rankList:MutableList<Rank> = mutableListOf()
+        val db = Firebase.firestore.collection("rank")
+        db.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                val rank = Rank(
+                    document.data["rank"].toString(),
+                    document.data["id"].toString(),
+                    document.data["arrivalTime"].toString()
+                )
+                rankList.add(rank)
+            }
+            binding.recyclerView.adapter = RankListRecyclerAdapter(requireContext(), rankList)
+        }
 
 
 
