@@ -14,31 +14,31 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tv_place_name"
+            android:id="@+id/tv_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="성동구 개방 화장실"
+            android:text="아이디님"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:padding="4dp"/>
 
         <TextView
-            android:id="@+id/tv_address"
+            android:id="@+id/tv_when"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_place_name"
-            android:text="서울 성동구 왕십리로 성동구청 본관 1층"
+            android:layout_below="@id/tv_id"
+            android:text="도착시간 00시 00분 보다 00 도착하셨습니다."
             android:padding="4dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="100m"
+            android:text="n등"
             android:textColor="@color/design_default_color_primary"
             android:textStyle="bold"
             android:padding="4dp"
             android:layout_alignParentRight="true"
-            android:id="@+id/tv_distance"/>
+            android:id="@+id/tv_rank"/>
 
     </RelativeLayout>
 

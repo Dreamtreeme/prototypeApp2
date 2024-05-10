@@ -62,7 +62,7 @@ class SubMainActivity : AppCompatActivity() {
         )
     }
     var myLocation: Location? = null
-
+    val db = Firebase.firestore.collection(G.collectionName!!)
 
 
 
@@ -74,7 +74,7 @@ class SubMainActivity : AppCompatActivity() {
                 //sharedPreferences 정보 삭제
                 deleteSharedPreferences(this, "collectionName")
                 //방을 나가면 앱 완전히 꺼지게하고 그 전에 firestore에서 위치정보 삭제
-                val db = Firebase.firestore.collection(G.collectionName!!)
+
                 db.document(G.userAccount!!.ID).delete()
                 finishAffinity()}
 
@@ -139,7 +139,6 @@ class SubMainActivity : AppCompatActivity() {
     }// oncreate----------------------------------------------------
 
     private fun updateLocationInFirestore() {
-        val db = Firebase.firestore.collection(G.collectionName!!)
         db.document(G.userAccount!!.ID).update("Lat", myLocation!!.latitude, "Long", myLocation!!.longitude)
     }
 
@@ -193,7 +192,41 @@ class SubMainActivity : AppCompatActivity() {
             //result[0] 에 두 지점의 거리를 m미터 단위로 계산하여 가지고 있음.
             if(result[0]<50) {//두 지점의 거리가 50m이내
                 if(wasEnter==false){
-                    AlertDialog.Builder(this@SubMainActivity).setMessage("목적지에 도착하셨습니다!").setPositiveButton("OK", null).create().show()
+                    //목적지에 도착하면 알림창 띄우기
+                    //알림창의 ok버튼을 누르면 서버에 있는 위치정보를 삭제, 그 후 서버에 id, 도착시간, 등수를 저장
+                    AlertDialog.Builder(this@SubMainActivity).setMessage("목적지에 도착하셨습니다!").setPositiveButton("OK",null).create().show()
+                    // Firestore 인스턴스 가져오기
+                    val db = Firebase.firestore
+
+                            // 등수 정보를 저장할 컬렉션 참조 얻기
+                    val ranksCollection = db.collection("ranks")
+
+                        // 문서를 생성하고 등수, 아이디, 도착시간 정보 저장
+                    ranksCollection.get().addOnSuccessListener { snapshot ->
+                        
+                        if (snapshot!!.size() == 0) {
+                            val rank =1
+                            val id = G.userAccount!!.ID
+                            val arrivalTime = System.currentTimeMillis()
+                            val userinfo = mutableMapOf(
+                                "rank" to rank,
+                                "id" to id,
+                                "arrivalTime" to arrivalTime
+                            )
+                            ranksCollection.document(G.userAccount!!.ID).set(userinfo)
+                        }else if(snapshot.size()>=1){
+                            val rank = snapshot.size()+1
+                            val id = G.userAccount!!.ID
+                            val arrivalTime = System.currentTimeMillis()
+                            val userinfo = mutableMapOf(
+                                "rank" to rank,
+                                "id" to id,
+                                "arrivalTime" to arrivalTime
+                            )
+                            ranksCollection.document(G.userAccount!!.ID).set(userinfo)
+                        }
+                    }
+
                     wasEnter=true
                 }
 
