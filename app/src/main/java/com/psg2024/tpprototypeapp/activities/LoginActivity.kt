@@ -1,32 +1,10 @@
 package com.psg2024.tpprototypeapp.activities
 
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.user.UserApiClient
-import com.navercorp.nid.NaverIdLoginSDK
-import com.navercorp.nid.oauth.OAuthLoginCallback
-import com.psg2024.tpprototypeapp.G
-import com.psg2024.tpprototypeapp.data.UserAccount
 import com.psg2024.tpprototypeapp.databinding.ActivityLoginBinding
-import com.psg2024.tpprototypeapp.network.RetrofitHelper
-import com.psg2024.tpprototypeapp.network.RetrofitService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 class LoginActivity : AppCompatActivity() {
 
