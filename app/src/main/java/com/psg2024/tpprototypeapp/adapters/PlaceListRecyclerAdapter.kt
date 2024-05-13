@@ -1,15 +1,12 @@
 package com.psg2024.tpprototypeapp.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.google.gson.Gson
 import com.psg2024.tpprototypeapp.G
-import com.psg2024.tpprototypeapp.activities.PlaceDetailActivity
-import com.psg2024.tpprototypeapp.data.Place
 import com.psg2024.tpprototypeapp.data.Rank
 import com.psg2024.tpprototypeapp.databinding.RecyclerItemListFragmentBinding
 
@@ -30,7 +27,7 @@ class RankListRecyclerAdapter(val context: Context, val documents: MutableList<R
         val rank : Rank =documents[position]
         val arrivalTime = rank.arrivalTime.toLong()
         val appointTime=G.collectionName!!.split(",")[2].toLong()
-        var yourArrivalTime=appointTime-arrivalTime
+        var yourArrivalTime=(appointTime-arrivalTime).toInt()
         if(yourArrivalTime<0) {
             //밀리초 -> 시간+"시간"+(나머지시간 분으로변환)+"분" 으로변환 단 시간이 1 이하면 0시간으로 표시, 남은 분이 1분 이하면 0분으로 표시
             //양수로 변환

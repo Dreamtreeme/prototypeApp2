@@ -7,6 +7,7 @@
     tools:context=".activities.SignupActivity"
     android:orientation="vertical"
     android:gravity="center_horizontal"
+    android:background="@color/white"
     >
 
     <!--    뒤로가기(업) 버튼을 가지는 툴바-->

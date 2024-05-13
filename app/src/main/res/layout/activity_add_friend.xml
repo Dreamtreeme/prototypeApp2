@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".activities.AddFriendActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -25,6 +26,7 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         app:tabMode="scrollable"/>
 
     <!-- 프레그먼트를 페이지로 넘기드싱 보여주는 아답터뷰-->

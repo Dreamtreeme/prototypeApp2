@@ -19,9 +19,6 @@
         android:theme="@style/Theme.TPPrototypeApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".activities.SecondActivity"
-            android:exported="false" />
 
         <meta-data
             android:name="firebase_messaging_auto_init_enabled"
@@ -63,12 +60,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.PlaceDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.MainActivity2"
-            android:exported="false" /> <!-- 카카오 로그인 리다이렉트 화면 -->
+
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">

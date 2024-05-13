@@ -20,7 +20,4 @@ interface RetrofitService {
     @GET("/v2/local/search/keyword.json")
     fun searchPlace(@Query("query") query:String,) :Call<KakaoSearchPlaceResponse>
 
-    // 네이버 api
-    @GET("/v1/nid/me")
-    fun getNidUserInfo(@Header("Authorization:") authoriztion: String) : Call<String>
 }
