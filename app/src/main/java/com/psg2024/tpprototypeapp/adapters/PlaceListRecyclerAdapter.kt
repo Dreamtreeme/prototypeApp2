@@ -11,7 +11,7 @@ import com.psg2024.tpprototypeapp.data.Rank
 import com.psg2024.tpprototypeapp.databinding.RecyclerItemListFragmentBinding
 
 class RankListRecyclerAdapter(val context: Context, val documents: MutableList<Rank>) : Adapter<RankListRecyclerAdapter.VH>(){
-    open inner class VH(val binding: RecyclerItemListFragmentBinding) :ViewHolder(binding.root)
+    open inner class VH(val binding: RecyclerItemListFragmentBinding) : ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val layoutInflater = LayoutInflater.from(context)

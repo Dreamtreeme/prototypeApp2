@@ -18,6 +18,7 @@ import com.google.android.gms.location.Priority
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.psg2024.tpprototypeapp.G
+import com.psg2024.tpprototypeapp.data.Test
 import com.psg2024.tpprototypeapp.databinding.ActivityMain2Binding
 
 

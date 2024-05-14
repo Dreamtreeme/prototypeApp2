@@ -17,11 +17,12 @@ import com.psg2024.tpprototypeapp.activities.SubMainActivity
 import com.psg2024.tpprototypeapp.adapters.RankListRecyclerAdapter
 import com.psg2024.tpprototypeapp.data.Rank
 import com.psg2024.tpprototypeapp.databinding.FragmentListBinding
+import com.psg2024.tpprototypeapp.databinding.FragmentPlaceListBinding
 
 class ListFragment : Fragment() {
 
 
-    private lateinit var binding : FragmentListBinding
+    private lateinit var binding : FragmentPlaceListBinding
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
 
@@ -30,7 +31,7 @@ class ListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       binding= FragmentListBinding.inflate(inflater, container, false)
+       binding= FragmentPlaceListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -41,9 +42,9 @@ class ListFragment : Fragment() {
         db.get().addOnSuccessListener { documents ->
             for (document in documents) {
                 val rank = Rank(
-                    document.data["rank"].toString(),
-                    document.data["id"].toString(),
-                    document.data["arrivalTime"].toString()
+                    rank = document.data["rank"].toString(),
+                    id =document.data["id"].toString(),
+                    arrivalTime = document.data["arrivalTime"].toString()
                 )
                 rankList.add(rank)
             }
