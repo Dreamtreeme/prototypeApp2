@@ -3,10 +3,7 @@ package com.psg2024.tpprototypeapp.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.psg2024.tpprototypeapp.G
 import com.psg2024.tpprototypeapp.databinding.RecyclerItemFriendListBinding
 

@@ -83,8 +83,11 @@ class MakeRoomActivity : AppCompatActivity() {
                 timePicker.addOnPositiveButtonClickListener { it ->
                     // 시간 선택 완료시 선택한 시간 밀리초로받기
                     val t = timePicker.hour.toLong()*60*60*1000
+                    Toast.makeText(this, "$t", Toast.LENGTH_SHORT).show()
                     val t2 = timePicker.minute.toLong()*60*1000
+                    Toast.makeText(this, "$t2", Toast.LENGTH_SHORT).show()
                     timetomili= t+t2
+                    Toast.makeText(this, "$timetomili", Toast.LENGTH_SHORT).show()
                     val period = if (timePicker.hour < 12) "오전" else "오후"
                     val hour = if (timePicker.hour == 0 || timePicker.hour == 12) 12 else timePicker.hour % 12
                     binding.viewTime.text = "$period ${hour}시 ${timePicker.minute}분"

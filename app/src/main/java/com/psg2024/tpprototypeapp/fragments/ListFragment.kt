@@ -2,10 +2,12 @@ package com.psg2024.tpprototypeapp.fragments
 
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationListener
@@ -37,30 +39,37 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val db = Firebase.firestore.collection(G.collectionName+"ranks")
-        db.get().addOnSuccessListener { documents ->
-            for (document in documents) {
-                val rank = Rank(
-                    rank = document.data["rank"].toString(),
-                    id =document.data["id"].toString(),
-                    arrivalTime = document.data["arrivalTime"].toString()
-                )
-                rankList.add(rank)
-            }
-
-
-        }
-
+        getRankList()
 
 
     }
-    override fun onResume() {
-        super.onResume()
-        if (rankList.size > 0) {
-            binding.recyclerView.adapter = RankListRecyclerAdapter(requireContext(), rankList)
-            binding.recyclerView.adapter!!.notifyDataSetChanged()
-        }
+
+
+    private fun getRankList() {
+        val db = Firebase.firestore
+        db.collection(G.collectionName!!+"ranks")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val rank = Rank(
+                        document.data["id"].toString(),
+                        document.data["rank"].toString(),
+                        document.data["arrivalTime"].toString()
+                    )
+                    rankList.add(rank)
+                }
+                Toast.makeText(requireContext(), "성공불러옴", Toast.LENGTH_SHORT).show()
+                Log.d("ListFragment", "onViewCreated: ${rankList.size}")
+                binding.recyclerView.adapter = RankListRecyclerAdapter(requireContext(), rankList)
+                binding.recyclerView.adapter!!.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Error")
+                    .setMessage(exception.message)
+                    .setPositiveButton("OK", null)
+                    .show()
+            }
     }
 
 

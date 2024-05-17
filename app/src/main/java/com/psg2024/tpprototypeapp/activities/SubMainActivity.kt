@@ -76,7 +76,10 @@ class SubMainActivity : AppCompatActivity() {
                 //방을 나가면 앱 완전히 꺼지게하고 그 전에 firestore에서 위치정보 삭제
 
                 db.document(G.userAccount!!.ID).delete()
-                finishAffinity()}
+                //앱을 완전히 끄기
+                finish()
+
+                }.show()
 
         }
 
@@ -196,6 +199,9 @@ class SubMainActivity : AppCompatActivity() {
                     //목적지에 도착하면 알림창 띄우기
                     //알림창의 ok버튼을 누르면 서버에 있는 위치정보를 삭제, 그 후 서버에 id, 도착시간, 등수를 저장
                     AlertDialog.Builder(this@SubMainActivity).setMessage("목적지에 도착하셨습니다!").setPositiveButton("OK",null).create().show()
+
+                    // runOnUiThread 끄기
+                    handler.removeCallbacks(runnable!!)
                     // Firestore 인스턴스 가져오기
                     val db = Firebase.firestore
 

@@ -12,15 +12,15 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:background="#F79433"
         android:layout_height="?attr/actionBarSize"
+        android:background="#F79433"
         app:navigationIcon="@drawable/exit_app">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/logo" />
     </com.google.android.material.appbar.MaterialToolbar>
 
     <FrameLayout

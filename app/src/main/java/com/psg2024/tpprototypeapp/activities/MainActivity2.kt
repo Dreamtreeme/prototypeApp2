@@ -54,7 +54,7 @@ class MainActivity2 : AppCompatActivity() {
         setContentView(binding.root)
         if(G.collectionName == null){
             G.collectionName = getSharedPreferences(this, "collectionName", "").toString()
-            if (G.collectionName != "" && G.collectionName!!.split(",")[0]==G.userAccount!!.ID){
+            if (G.collectionName != "" && G.collectionName!!.split(",")[0]==G.userAccount!!.ID ){
                 AlertDialog.Builder(this).setMessage("이전에 생성한 방이 있습니다. 이어서 하시겠습니까?").setNegativeButton("취소"){_,_->
                     //firestore 정보 삭제
                     Firebase.firestore.collection(G.collectionName!!).document(G.userAccount!!.ID).delete()
