@@ -4,7 +4,6 @@ import com.psg2024.tpprototypeapp.data.FriendRequestID
 
 import com.psg2024.tpprototypeapp.data.KakaoSearchPlaceResponse
 import com.psg2024.tpprototypeapp.data.Place
-import com.psg2024.tpprototypeapp.data.Test
 import com.psg2024.tpprototypeapp.data.UserAccount
 import com.psg2024.tpprototypeapp.data.UserFriend
 

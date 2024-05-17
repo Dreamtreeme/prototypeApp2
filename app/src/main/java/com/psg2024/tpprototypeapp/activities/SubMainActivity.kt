@@ -200,7 +200,7 @@ class SubMainActivity : AppCompatActivity() {
                     val db = Firebase.firestore
 
                             // 등수 정보를 저장할 컬렉션 참조 얻기
-                    val ranksCollection = db.collection("ranks")
+                    val ranksCollection = db.collection(G.collectionName+"ranks")
 
                         // 문서를 생성하고 등수, 아이디, 도착시간 정보 저장
                     ranksCollection.get().addOnSuccessListener { snapshot ->

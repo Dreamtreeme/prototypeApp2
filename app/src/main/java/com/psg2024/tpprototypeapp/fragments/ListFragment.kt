@@ -20,7 +20,7 @@ import com.psg2024.tpprototypeapp.databinding.FragmentListBinding
 import com.psg2024.tpprototypeapp.databinding.FragmentPlaceListBinding
 
 class ListFragment : Fragment() {
-
+    val rankList:MutableList<Rank> = mutableListOf()
 
     private lateinit var binding : FragmentPlaceListBinding
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -37,8 +37,8 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val rankList:MutableList<Rank> = mutableListOf()
-        val db = Firebase.firestore.collection("rank")
+
+        val db = Firebase.firestore.collection(G.collectionName+"ranks")
         db.get().addOnSuccessListener { documents ->
             for (document in documents) {
                 val rank = Rank(
@@ -48,11 +48,19 @@ class ListFragment : Fragment() {
                 )
                 rankList.add(rank)
             }
-            binding.recyclerView.adapter = RankListRecyclerAdapter(requireContext(), rankList)
+
+
         }
 
 
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (rankList.size > 0) {
+            binding.recyclerView.adapter = RankListRecyclerAdapter(requireContext(), rankList)
+            binding.recyclerView.adapter!!.notifyDataSetChanged()
+        }
     }
 
 
