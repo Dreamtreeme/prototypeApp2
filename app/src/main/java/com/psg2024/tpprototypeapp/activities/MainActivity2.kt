@@ -60,6 +60,7 @@ class MainActivity2 : AppCompatActivity() {
                     Firebase.firestore.collection(G.collectionName!!).document(G.userAccount!!.ID).delete()
                     //sharedPreferences 정보 삭제
                     deleteSharedPreferences(this, "collectionName")
+                    G.collectionName = null
                 }.setPositiveButton("확인"){_,_->
                     finish()
                     startActivity(Intent(this, SubMainActivity::class.java))

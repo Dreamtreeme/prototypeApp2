@@ -112,7 +112,12 @@ class LocationActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
         binding.searchLocation.setOnClickListener {
             searchQuery = binding.searchBar.text.toString()
-            searchPlaces()
+
+            if(searchQuery== ""){
+                Toast.makeText(this, "검색어를 입력해주세요", Toast.LENGTH_SHORT).show()
+            }else{
+                searchPlaces()
+            }
         }
     }//oncreate ---------------------------------------------------------
 
@@ -124,10 +129,7 @@ class LocationActivity : AppCompatActivity() {
         val retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitApiService = retrofit.create(RetrofitService::class.java)
         val call = retrofitApiService.searchPlace(
-            searchQuery,
-
-
-        )
+            searchQuery,)
         call.enqueue(object : Callback<KakaoSearchPlaceResponse> {
             override fun onResponse(
                 call: Call<KakaoSearchPlaceResponse>,

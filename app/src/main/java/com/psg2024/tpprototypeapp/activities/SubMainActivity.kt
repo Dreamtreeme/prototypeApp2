@@ -214,7 +214,7 @@ class SubMainActivity : AppCompatActivity() {
                         if (snapshot!!.size() == 0) {
                             val rank =1
                             val id = G.userAccount!!.ID
-                            val arrivalTime = System.currentTimeMillis()
+                            val arrivalTime = System.currentTimeMillis()+32400000
                             val userinfo = mutableMapOf(
                                 "rank" to rank,
                                 "id" to id,

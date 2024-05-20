@@ -47,7 +47,7 @@ class ListFragment : Fragment() {
 
     private fun getRankList() {
         val db = Firebase.firestore
-        db.collection(G.collectionName!!+"ranks")
+        db.collection(G.collectionName!!+",ranks")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {

@@ -33,11 +33,11 @@ class RankListRecyclerAdapter(val context: Context, val documents: MutableList<R
             yourArrivalTime*=-1
             val hour = Math.floor(((yourArrivalTime / 3600000).toDouble())).toInt()
             val minute = Math.floor(((yourArrivalTime % 3600000) / 60000).toDouble()).toInt()
-            holder.binding.tvWhen.text = "약속시간 보다 ${hour}시간 ${minute}분 빨리 도착하셨습니다. "
+            holder.binding.tvWhen.text = "약속시간 보다 ${hour}시간 ${minute}분 늦게 도착하셨습니다. "
         }else if(yourArrivalTime>0){
             val hour = Math.floor(((yourArrivalTime / 3600000).toDouble())).toInt()
             val minute = Math.floor(((yourArrivalTime % 3600000) / 60000).toDouble()).toInt()
-            holder.binding.tvWhen.text = "도착시간 보다 ${hour}시간 ${minute}분 늦게 도착하셨습니다. "}
+            holder.binding.tvWhen.text = "도착시간 보다 ${hour}시간 ${minute}분 빨리 도착하셨습니다. "}
 
 
         holder.binding.tvRank.text = rank.rank
