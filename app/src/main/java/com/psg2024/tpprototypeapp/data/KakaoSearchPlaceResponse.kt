@@ -20,3 +20,9 @@ data class Place(
     var distance:String
 
 )
+
+data class Rank(
+    var rank:String,
+    var id:String,
+    var arrivalTime:String
+)

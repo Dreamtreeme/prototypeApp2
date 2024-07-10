@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activities.LocationActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/baseline_arrow_back_24">
+        <LinearLayout
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="8dp"
+            android:layout_gravity="center">
+            <EditText
+                android:id="@id/search_bar"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:hint="검색"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"
+                android:inputType="text"/>
+
+            <ImageView
+                android:id="@+id/search_location"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:src="@drawable/img"/>
+
+
+
+        </LinearLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+    <FrameLayout
+        android:id="@+id/container_fragment2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        />
+
+</RelativeLayout>
