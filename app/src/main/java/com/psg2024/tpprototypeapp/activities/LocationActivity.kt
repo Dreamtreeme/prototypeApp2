@@ -35,18 +35,17 @@ import retrofit2.Response
 
 class LocationActivity : AppCompatActivity() {
     val binding by lazy { ActivityLocationBinding.inflate(layoutInflater) }
-    //카카오 검색에 필요한 요청 데이터: query (검색어), x(경도-longitude)y(위도-latitude)
-    //1. 검색장소명
+
     var searchQuery:String = "서울시청"  //앱 초기 검색어
-    // 2. 현재 내 위치 정보 객체 (위도, 경도 정보를 멤버로 보유)
+
     var myLocation: Location?=null
 
 
-    // [ Google Fused Location API 사용 : 라이브러리 play-sevices-location ]
+
 
     val LocationProviderClient: FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
-    // kakao search api 응답결과 객체 참조변수
+
     var searchPlaceResponse: KakaoSearchPlaceResponse?= null
     val permissionResultLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -83,7 +82,7 @@ class LocationActivity : AppCompatActivity() {
 
             myLocation = p0.lastLocation
 
-            //위치 탐색이 종료되었으니 내 위치정보 업데이트를 이제 그만..
+
             LocationProviderClient.removeLocationUpdates(this)//this:locationCallback 객체
 
             //위치 정보를 얻었으니.. 키워드 장소 검색 작업시작!
@@ -96,10 +95,10 @@ class LocationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val permissionState: Int =
-            checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
         if (permissionState == PackageManager.PERMISSION_DENIED) {
             //퍼미션을 요청하는 다이얼로그 보이고, 그 결과를 받아오는 작업을 대신해주는 대행사 이용
-            permissionResultLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else {
             //위치정보수집이 허가되어 있다면.. 곧바로 위치정보 얻어오는 작업 시작
             requestMyLocation()
@@ -125,7 +124,7 @@ class LocationActivity : AppCompatActivity() {
     fun searchPlaces() {
         G.documents!!.clear()
 
-        //레트로핏을 이용한 REST API 작업 수행 -GET방식
+
         val retrofit = RetrofitHelper.getRetrofitInstance("https://dapi.kakao.com")
         val retrofitApiService = retrofit.create(RetrofitService::class.java)
         val call = retrofitApiService.searchPlace(
@@ -135,22 +134,13 @@ class LocationActivity : AppCompatActivity() {
                 call: Call<KakaoSearchPlaceResponse>,
                 response: Response<KakaoSearchPlaceResponse>
             ) {
-                //응답받은 json 을 파싱한 객체를 참조하기
+
                 searchPlaceResponse = response.body()
                 G.documents?.addAll(searchPlaceResponse?.documents as MutableList<Place> )
-//                    Toast.makeText(this@MainActivity, "${searchPlaceResponse!!.meta.pageable_count}", Toast.LENGTH_SHORT).show()
 
-                //먼저 데이터가 온전히 잘 왔는지 파악해보기
                 val meta: PlaceMeta? = searchPlaceResponse?.meta
                 val documents: MutableList<Place>? = searchPlaceResponse?.documents
 
-//                AlertDialog.Builder(this@MainActivity).setMessage("${meta?.total_count}\n${documents?.get(0)?.place_name}").create().show()
-                // 무조건 검색이 완료되면 '리스트'형태로 먼저 보여주도록 할 것임
-                Toast.makeText(
-                    this@LocationActivity,
-                    "$searchQuery\n${documents!!.get(0).y.toDouble()},${documents.get(0).x.toDouble()}",
-                    Toast.LENGTH_SHORT
-                ).show()
                 onFunctionExecuted()
 
 

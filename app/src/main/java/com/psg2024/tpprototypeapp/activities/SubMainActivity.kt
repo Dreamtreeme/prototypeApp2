@@ -14,10 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.firebase.firestore.ktx.firestore
@@ -27,10 +25,7 @@ import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.databinding.ActivitySubMainBinding
 import com.psg2024.tpprototypeapp.fragments.InviteFragment
 import com.psg2024.tpprototypeapp.fragments.ListFragment
-import com.psg2024.tpprototypeapp.fragments.MapFragment
 import com.psg2024.tpprototypeapp.fragments.SubMapFragment
-import java.util.Timer
-import java.util.TimerTask
 
 class SubMainActivity : AppCompatActivity() {
 
@@ -38,14 +33,14 @@ class SubMainActivity : AppCompatActivity() {
     var runnable: Runnable? = null
     fun runEvery60Seconds() {
         runnable = Runnable {
-            // Fragment 재생성 코드
+
             runOnUiThread {
                 requestMyLocation()
                 if(myLocation != null){
                     supportFragmentManager.beginTransaction().replace(R.id.container_fragment3, SubMapFragment()).commit()
                     updateLocationInFirestore()}
             }
-            // 60초 후에 다시 runnable 실행
+
             handler.postDelayed(runnable!!, 60000)
         }
         handler.postDelayed(runnable!!, 60000) // 60초 후에 runnable 실행
@@ -54,7 +49,6 @@ class SubMainActivity : AppCompatActivity() {
 
 
     val binding by lazy { ActivitySubMainBinding.inflate(layoutInflater) }
-    // [ Google Fused Location API 사용 : 라이브러리 play-sevices-location ]
 
     val LocationProviderClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(
@@ -122,10 +116,10 @@ class SubMainActivity : AppCompatActivity() {
 
         // 위치정보 제공에 대한 퍼미션 체크
         val permissionState: Int =
-            checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
         if (permissionState == PackageManager.PERMISSION_DENIED) {
             //퍼미션을 요청하는 다이얼로그 보이고, 그 결과를 받아오는 작업을 대신해주는 대행사 이용
-            permissionResultLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else {
             //위치정보수집이 허가되어 있다면.. 곧바로 위치정보 얻어오는 작업 시작
             requestMyLocation()
@@ -180,18 +174,16 @@ class SubMainActivity : AppCompatActivity() {
 
     }
 
-    //위치정보가 갱신되면 호출되는 콜백 리스너 객체
+
 
 
 
 
     private fun locationListener(): LocationListener = object: LocationListener {
         override fun onLocationChanged(location: Location) {
-
-            val result: FloatArray = floatArrayOf(0.0f, 0.0f, 0.0f)//3칸짜리 빈 배열 준비 --이 배열안에 계산결과를 넣어줌
+            val result: FloatArray = floatArrayOf(0.0f, 0.0f, 0.0f)//
             myLocation = location
             Location.distanceBetween(myLocation!!.latitude,myLocation!!.longitude , G.pos[0].toDouble(), G.pos[1].toDouble(), result)
-            //위치 갱신이 끝났으니 종료
             LocationProviderClient.removeLocationUpdates(this)
             //result[0] 에 두 지점의 거리를 m미터 단위로 계산하여 가지고 있음.
             if(result[0]<50) {//두 지점의 거리가 50m이내
@@ -199,18 +191,10 @@ class SubMainActivity : AppCompatActivity() {
                     //목적지에 도착하면 알림창 띄우기
                     //알림창의 ok버튼을 누르면 서버에 있는 위치정보를 삭제, 그 후 서버에 id, 도착시간, 등수를 저장
                     AlertDialog.Builder(this@SubMainActivity).setMessage("목적지에 도착하셨습니다!").setPositiveButton("OK",null).create().show()
-
-                    // runOnUiThread 끄기
                     handler.removeCallbacks(runnable!!)
-                    // Firestore 인스턴스 가져오기
                     val db = Firebase.firestore
-
-                            // 등수 정보를 저장할 컬렉션 참조 얻기
                     val ranksCollection = db.collection(G.collectionName+"ranks")
-
-                        // 문서를 생성하고 등수, 아이디, 도착시간 정보 저장
                     ranksCollection.get().addOnSuccessListener { snapshot ->
-
                         if (snapshot!!.size() == 0) {
                             val rank =1
                             val id = G.userAccount!!.ID
@@ -233,18 +217,12 @@ class SubMainActivity : AppCompatActivity() {
                             ranksCollection.document(G.userAccount!!.ID).set(userinfo)
                         }
                     }
-
                     wasEnter=true
                 }
-
-
             }else{
                 wasEnter = false
             }
-
         }
-
-
     }
     var wasEnter = false
 

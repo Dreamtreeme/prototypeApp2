@@ -35,7 +35,7 @@ class SubMapFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return binding.root
     }
 
@@ -61,28 +61,28 @@ class SubMapFragment : Fragment() {
     private val mapReadyCallback : KakaoMapReadyCallback = object : KakaoMapReadyCallback(){
         override fun onMapReady(kakaoMap: KakaoMap) {
 
-            //목적지를 지도 중심으로 설정
+
             val latitude: Double =
-                G.pos[0].toDouble() ?: 37.5666 //비동기는 null이 올수 있으니 non nullable 쓰는걸 비추
-            val longitude: Double = G.pos[1].toDouble() ?: 126.9782
+                G.pos[0].toDouble()
+            val longitude: Double = G.pos[1].toDouble()
             val thatPos: LatLng = LatLng.from(latitude, longitude)
 
 
-            // 내위치를 얻어왔으면 지도 카메라를 이동
+
             val cameraUpdate: CameraUpdate = CameraUpdateFactory.newCenterPosition(thatPos, 16)
             kakaoMap.moveCamera(cameraUpdate)
 
-            // 내 위치에 대한 마커를 추가하기
+
             val labelOptions: LabelOptions =
                 LabelOptions.from(thatPos).setStyles(R.drawable.ic_mypin).setTexts(//목적지 위치
                     "목적지",
                     "${G.collectionName!!.split(",")[1]}"
                 )
-            // 라벨이 그려질 레이어 객체 소환
+
             val labelLayer: LabelLayer = kakaoMap.labelManager!!.layer!!
             labelLayer.addLabel(labelOptions)
 
-            // Firestore에서 필드값 변경 감지
+
             db.addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     // 오류 처리
@@ -91,7 +91,7 @@ class SubMapFragment : Fragment() {
 
                 if (snapshot != null && !snapshot.isEmpty)
                     snapshot.forEach {
-                        // 서버의 좌표 가져와서 지도에 보여주는 로직 추가
+
                         val latitude3  = it.get("Lat").toString().toDouble()
                         val longitude3 = it.get("Long").toString().toDouble()
                         val newPos2= LatLng.from(latitude3, longitude3)
@@ -105,7 +105,7 @@ class SubMapFragment : Fragment() {
             kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
 
                 label.apply {
-                    //정보창 [infowindow] 보여주기
+
                     val layout = GuiLayout(Orientation.Vertical)
                     layout.setPadding(16, 16, 16, 16)
                     layout.setBackground(R.drawable.base_msg, true)
@@ -116,7 +116,7 @@ class SubMapFragment : Fragment() {
                         guiText.setTextColor(Color.WHITE)
                         layout.addView(guiText)
                     }//forEach
-                    // [정보창 info window] 객체 만들기
+
                     val options: InfoWindowOptions = InfoWindowOptions.from(position)
                     options.body = layout
                     options.setBodyOffset(0f, -10f)

@@ -33,10 +33,7 @@ class MapFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Fragment에서 Bundle 객체 가져오기
-
-        // Bundle 객체에서 LatLng 객체 추출
+    ): View {
         return binding.root
 
 
@@ -50,8 +47,7 @@ class MapFragment : Fragment() {
         // 그리고 서버에서 좌표값 가져와서 지도에 계속 그리기
         // 친구초대를 한 경우 수락을 누른 순간 방에 들어와짐. 방에 들어오면 위의 코드가 발동하면서 같은 컬렉션에 저장됨
         // 그렇다면 방 만들기를 눌렀을때 컬렉션 이름을 고유의 값으로 정해야함. 자기아이디+ 모임장소+날짜시간 조합해서 만들면됨
-        // 초대를 보냈을때 확인을 누르면 이 방으로 오게됨. 오게된 순간 같은 컬렉션에 저장. 즉 방만들기로 들가면 유일한 컬렉션이 생기는거고
-        // 일단 방만들때 서버에 컬렉션 만드는거나하자
+        // 초대를 보냈을때 확인을 누르면 이 방으로 오게됨. 오게된 순간 같은 컬렉션에 저장.
 
 
 
@@ -60,25 +56,20 @@ class MapFragment : Fragment() {
     private val mapReadyCallback : KakaoMapReadyCallback = object : KakaoMapReadyCallback(){
         override fun onMapReady(kakaoMap: KakaoMap) {
 
-            //지도가 준비되면 호출되는 콜백 메서드
+
             G.documents ?: return
 
-            //현재 내 위치를 지도의 중심위치로 설정
-            val latitude: Double= G.documents!!.get(0).y.toDouble() ?: 37.5666 //비동기는 null이 올수 있으니 non nullable 쓰는걸 비추
-            val longitude: Double = G.documents!!.get(0).x.toDouble() ?: 126.9782
+            val latitude: Double=
+                G.documents!!.get(0).y.toDouble() //비동기는 null이 올수 있으니 non nullable 쓰는걸 비추
+            val longitude: Double = G.documents!!.get(0).x.toDouble()
             val myPos : LatLng = LatLng.from(latitude, longitude)
 
 
-            // 내위치를 얻어왔으면 지도 카메라를 이동
+
             val cameraUpdate : CameraUpdate = CameraUpdateFactory.newCenterPosition(myPos, 16)
             kakaoMap.moveCamera(cameraUpdate)
 
 
-//            // 내 위치에 대한 마커를 추가하기
-//            val labelOptions : LabelOptions = LabelOptions.from(myPos).setStyles(R.drawable.ic_mypin) //백터 그래픽 이미지는 안됨 png로 써야함
-//            // 라벨이 그려질 레이어 객체 소환
-//            val labelLayer: LabelLayer = kakaoMap.labelManager!!.layer!!
-//            labelLayer.addLabel(labelOptions)
 
 
             val placeList :List<Place>? = (activity as LocationActivity).searchPlaceResponse?.documents
@@ -88,13 +79,13 @@ class MapFragment : Fragment() {
                 val options = LabelOptions.from(pos).setStyles(R.drawable.ic_pin).setTexts(it.place_name).setTag(it)
                 kakaoMap.labelManager!!.layer!!.addLabel(options)
 
-            }//forEach
+            }
 
-            // 라벨 클릭에 반응하기
+
             kakaoMap.setOnLabelClickListener { kakaoMap, layer, label ->
 
                 label.apply {
-                    //정보창 [infowindow] 보여주기
+
                     val layout = GuiLayout(Orientation.Vertical)
                     layout.setPadding(16,16,16,16)
                     layout.setBackground(R.drawable.base_msg,true)
@@ -104,8 +95,8 @@ class MapFragment : Fragment() {
                         guiText.setTextSize(30)
                         guiText.setTextColor(Color.WHITE)
                         layout.addView(guiText)
-                    }//forEach
-                    // [정보창 info window] 객체 만들기
+                    }
+
                     val options: InfoWindowOptions = InfoWindowOptions.from(position)
                     options.body= layout
                     options.setBodyOffset(0f, -10f)
@@ -119,7 +110,7 @@ class MapFragment : Fragment() {
 
             }//label click
 
-            //[정보창 클릭에 반응하기
+
             kakaoMap.setOnInfoWindowClickListener { kakaoMap, infoWindow, guiId ->
                 //장소에 대한 상세 소개 웹페이지를 보여주는 화면으로 이동
                 val intent = Intent(requireContext(), MakeRoomActivity::class.java)
@@ -129,16 +120,15 @@ class MapFragment : Fragment() {
                 Toast.makeText(requireContext(), "${place.place_name}", Toast.LENGTH_SHORT).show()
                 val locationName : String = place.place_name
                 intent.putExtra("place",locationName)
-//                intent.putExtra("y",place.y)
+
                 G.pos.add(place.y)
-//                intent.putExtra("x",place.x)
+
                 G.pos.add(place.x)
 
 
 
 
-//                val json:String= Gson().toJson(place)
-//                intent.putExtra("place", json)
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
 

@@ -18,11 +18,9 @@ class G{
         //로그인 계정 정보- [아이디, 이메일 정보 저장 객체]
         var userAccount: UserAccount?=null
 
-        var userFriend: UserFriend?=null
 
         var documents: MutableList<Place>? = mutableListOf()
 
-        var token : String? =null
 
         var FriendRequestList: MutableList<FriendRequestID>? = mutableListOf()
 

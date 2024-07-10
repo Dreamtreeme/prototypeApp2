@@ -1,6 +1,6 @@
 package com.psg2024.tpprototypeapp.fragments
 
-import android.location.Location
+
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,15 +10,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.psg2024.tpprototypeapp.G
-import com.psg2024.tpprototypeapp.R
-import com.psg2024.tpprototypeapp.activities.SubMainActivity
 import com.psg2024.tpprototypeapp.adapters.RankListRecyclerAdapter
 import com.psg2024.tpprototypeapp.data.Rank
-import com.psg2024.tpprototypeapp.databinding.FragmentListBinding
 import com.psg2024.tpprototypeapp.databinding.FragmentPlaceListBinding
 
 class ListFragment : Fragment() {
@@ -32,7 +28,7 @@ class ListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
        binding= FragmentPlaceListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -47,7 +43,7 @@ class ListFragment : Fragment() {
 
     private fun getRankList() {
         val db = Firebase.firestore
-        db.collection(G.collectionName!!+",ranks")
+        db.collection(G.collectionName!!+"ranks")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {

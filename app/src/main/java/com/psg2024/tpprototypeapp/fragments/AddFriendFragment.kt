@@ -32,7 +32,7 @@ class AddFriendFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?  {
+    ): View {
         binding = FragmentAddFriendBinding.inflate(inflater, container, false)
         return binding.root
     }

@@ -55,22 +55,98 @@ class RequestFriendAdapter(val context: Context, val documents : MutableList<Fri
     }
 
     private fun addFriend(myId: String, friendId: String) {
-        val myFriends = firestore.collection("MyFriends").document(myId)
-        myFriends.update("friends", FieldValue.arrayUnion(friendId))
-            .addOnSuccessListener {
-                Toast.makeText(context, "친구 추가가 완료되었습니다.", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-            }
+        val myFriendsRef = firestore.collection("MyFriends").document(myId)
+        val friendFriendsRef = firestore.collection("MyFriends").document(friendId)
 
-        val friendFriends = firestore.collection("MyFriends").document(friendId)
-        friendFriends.update("friends", FieldValue.arrayUnion(myId))
-            .addOnSuccessListener {
-                Toast.makeText(context, "상대방 친구목록에 추가되었습니다.", Toast.LENGTH_SHORT).show()
+        myFriendsRef.get()
+            .addOnSuccessListener { myDocumentSnapshot ->
+                friendFriendsRef.get()
+                    .addOnSuccessListener { friendDocumentSnapshot ->
+                        when {
+                            myDocumentSnapshot.exists() && friendDocumentSnapshot.exists() -> {
+                                // 둘 다 기존 사용자
+                                myFriendsRef.update("friends", FieldValue.arrayUnion(friendId))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "친구 추가가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                friendFriendsRef.update("friends", FieldValue.arrayUnion(myId))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "상대방 친구목록에 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "상대방 친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                            myDocumentSnapshot.exists() && !friendDocumentSnapshot.exists() -> {
+                                // A는 기존 사용자, B는 신규 사용자
+                                myFriendsRef.update("friends", FieldValue.arrayUnion(friendId))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "친구 추가가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                val newFriendList = listOf(myId)
+                                friendFriendsRef.set(hashMapOf("friends" to newFriendList))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "상대방 친구목록에 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "상대방 친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                            !myDocumentSnapshot.exists() && friendDocumentSnapshot.exists() -> {
+                                // A는 신규 사용자, B는 기존 사용자
+                                val newFriendList = listOf(friendId)
+                                myFriendsRef.set(hashMapOf("friends" to newFriendList))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "친구 추가가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                friendFriendsRef.update("friends", FieldValue.arrayUnion(myId))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "상대방 친구목록에 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "상대방 친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                            else -> {
+                                // 둘 다 신규 사용자
+                                val myNewFriendList = listOf(friendId)
+                                myFriendsRef.set(hashMapOf("friends" to myNewFriendList))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "친구 추가가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                val friendNewFriendList = listOf(myId)
+                                friendFriendsRef.set(hashMapOf("friends" to friendNewFriendList))
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "상대방 친구목록에 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "상대방 친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, "상대방 친구 목록을 불러오는 중 오류 발생: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(context, "상대방 친구 추가 실패: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "내 친구 목록을 불러오는 중 오류 발생: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
     }
 

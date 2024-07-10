@@ -2,7 +2,6 @@ package com.psg2024.tpprototypeapp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.psg2024.tpprototypeapp.R
 import com.psg2024.tpprototypeapp.databinding.ActivityAddFriendBinding
 
 class RequestFriendActivity : AppCompatActivity() {

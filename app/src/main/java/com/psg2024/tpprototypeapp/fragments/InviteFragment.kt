@@ -62,11 +62,22 @@ class InviteFragment : Fragment() {
             .get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    G.friendList= document.data?.get("friends") as MutableList<String>
-
+                    val friends = document.data?.get("friends") as? MutableList<String>
+                    G.friendList = friends ?: mutableListOf()
+                } else {
+                    G.friendList = mutableListOf()
                 }
+                // 어댑터를 초기화하고 데이터를 반영
+                binding.ifRecyclerView.adapter = InviteFriendRecyclerAdapter(requireContext(), G.friendList)
+                binding.ifRecyclerView.adapter!!.notifyDataSetChanged()
             }
-        }
+            .addOnFailureListener {
+                G.friendList = mutableListOf()
+                // 실패한 경우 빈 리스트로 초기화하고 사용자에게 알림
+                Toast.makeText(requireContext(), "친구 목록을 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 
 
 }

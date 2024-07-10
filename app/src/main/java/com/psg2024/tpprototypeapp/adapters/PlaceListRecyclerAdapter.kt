@@ -28,8 +28,6 @@ class RankListRecyclerAdapter(val context: Context, val documents: MutableList<R
         val appointTime=G.collectionName!!.split(",")[2].toLong()
         var yourArrivalTime=(appointTime-arrivalTime).toInt()
         if(yourArrivalTime<0) {
-            //밀리초 -> 시간+"시간"+(나머지시간 분으로변환)+"분" 으로변환 단 시간이 1 이하면 0시간으로 표시, 남은 분이 1분 이하면 0분으로 표시
-            //양수로 변환
             yourArrivalTime*=-1
             val hour = Math.floor(((yourArrivalTime / 3600000).toDouble())).toInt()
             val minute = Math.floor(((yourArrivalTime % 3600000) / 60000).toDouble()).toInt()
